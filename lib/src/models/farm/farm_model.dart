@@ -15,7 +15,7 @@ class FarmModel {
   final String? ha;
   final DateTime? startDate;
   final DateTime? finalDate;
-  final String nfCode;
+  final String? nfCode;
   final String? servicoName;
   final List<ServicoModel>? servico;
   final double? valorTotal;
@@ -32,7 +32,7 @@ class FarmModel {
     this.ha,
     this.startDate,
     this.finalDate,
-    required this.nfCode,
+    this.nfCode,
     this.servicoName,
     this.servico,
     this.valorTotal,

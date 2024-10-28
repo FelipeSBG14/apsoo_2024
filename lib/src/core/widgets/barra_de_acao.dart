@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
 
 class BarraDeAcao extends StatelessWidget {
@@ -32,7 +34,11 @@ class BarraDeAcao extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  Modular.to.pushNamed('/newFarm/');
+                });
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     Colors.black, // Define o fundo do botão como preto
