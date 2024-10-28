@@ -18,12 +18,12 @@ class FarmRepositoryImpl implements FarmRepository {
     try {
       if (farm.id != null) {
         await _dio.put(
-          '/farms/${farm.id}',
+          '/farm/${farm.id}',
           data: farm.toMap(),
         );
       } else {
         await _dio.post(
-          '/farms',
+          '/farm',
           data: farm.toMap(),
         );
       }
@@ -38,7 +38,7 @@ class FarmRepositoryImpl implements FarmRepository {
   Future<void> farmDelete(id) async {
     try {
       await _dio.put(
-        '/farms/$id',
+        '/farm/$id',
         data: {
           'enabled': false,
         },
@@ -54,7 +54,7 @@ class FarmRepositoryImpl implements FarmRepository {
   Future<List<FarmModel>> getFarms(String? nome) async {
     try {
       final farmResult = await _dio.get(
-        '/farms',
+        '/farm',
         queryParameters: {
           if (nome != null) 'name': nome,
           'enabled': true,

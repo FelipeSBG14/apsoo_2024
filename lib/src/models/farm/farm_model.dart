@@ -88,8 +88,9 @@ class FarmModel {
       'municipio': municipio,
       'maquinario': maquinario,
       'ha': ha,
-      'startDate': startDate?.millisecondsSinceEpoch,
-      'finalDate': finalDate?.millisecondsSinceEpoch,
+      'startDate':
+          '${startDate!.toIso8601String()}Z', // Formata como ISO 8601 com sufixo 'Z'
+      'finalDate': '${finalDate!.toIso8601String()}Z',
       'nfCode': nfCode,
       'servicoName': servicoName,
       'servico': servico?.map((x) => x.toMap()).toList(),

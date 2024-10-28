@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
-import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/core/widgets/farm_input.dart';
+import 'package:trab_apsoo/src/modules/farms/farm_controller.dart';
 import 'package:validatorless/validatorless.dart';
+
+import '../../models/farm/farm_model.dart';
 
 class FarmAddPage extends StatefulWidget {
   const FarmAddPage({super.key});
@@ -11,7 +17,9 @@ class FarmAddPage extends StatefulWidget {
   State<FarmAddPage> createState() => _FarmAddPageState();
 }
 
-class _FarmAddPageState extends State<FarmAddPage> {
+class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
+  final controller = Modular.get<FarmController>();
+  late final ReactionDisposer statusDisposer;
   final formKey = GlobalKey<FormState>();
   final enabledEC = TextEditingController();
   final nomeEC = TextEditingController();
@@ -38,7 +46,38 @@ class _FarmAddPageState extends State<FarmAddPage> {
     servicoNameEC.dispose();
     valorTotalEC.dispose();
     funcionariosEC.dispose();
+    statusDisposer();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        statusDisposer = reaction((_) => controller.status, (status) async {
+          switch (status) {
+            case FarmStateStatus.inital:
+              break;
+            case FarmStateStatus.loading:
+              showLoader();
+              break;
+            case FarmStateStatus.loaded:
+              hideLoader();
+              break;
+            case FarmStateStatus.error:
+              showError('Erro ao buscar fazenda');
+              hideLoader();
+              break;
+            case FarmStateStatus.addOrUpdateFarm:
+              showSuccess('SUCESSO');
+              hideLoader();
+              break;
+          }
+        });
+        //controller.loadFarms();
+      },
+    );
+    super.initState();
   }
 
   void _submitForm() {
@@ -50,13 +89,32 @@ class _FarmAddPageState extends State<FarmAddPage> {
       if (startDate.isAfter(endDate)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content:
-                  Text('A data de início deve ser anterior à data final.')),
+            content: Text('A data de início deve ser anterior à data final.'),
+          ),
         );
         return;
       }
 
-      // Processar os dados do formulário
+      // Cria o modelo FarmModel com os dados do formulário
+      final farm = FarmModel(
+        nome: nomeEC.text,
+        enabled: true,
+        municipio: municipioEC.text,
+        maquinario: maquinarioEC.text,
+        ha: haEC.text,
+        startDate: startDate,
+        finalDate: endDate,
+        nfCode: nfCodeEC.text,
+        servicoName: servicoNameEC.text,
+        valorTotal: double.tryParse(valorTotalEC.text),
+        funcionarios: funcionariosEC.text,
+        // Adicione outras propriedades conforme necessário
+      );
+
+      // Chama o método addFarm na controller
+      controller.addFarm(farm);
+
+      // Feedback de sucesso ao usuário
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Formulário enviado com sucesso!')),
       );
@@ -180,9 +238,10 @@ class _FarmAddPageState extends State<FarmAddPage> {
                     FarmInput(
                       label: 'Valor Total',
                       hint: 'Insira o Valor Total',
+                      inputType: TextInputType.number,
                       controller: valorTotalEC,
-                      prefixIcon: const Align(
-                        alignment: Alignment.centerLeft,
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.only(top: 10, left: 8),
                         child: Text(
                           'R\$',
                         ),
