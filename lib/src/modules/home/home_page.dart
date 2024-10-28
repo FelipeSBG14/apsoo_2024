@@ -4,8 +4,22 @@ import 'package:trab_apsoo/src/core/widgets/barra_de_acao.dart';
 import 'package:trab_apsoo/src/core/widgets/menu_button.dart';
 import 'package:trab_apsoo/src/core/widgets/service_item.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 1; // Inicia na opção "Fazendas"
+
+  // Função para definir o índice selecionado
+  void _onMenuButtonPressed(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +36,28 @@ class HomePage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               width: context.screenWidht * 0.2,
               height: context.screenHeight * 1,
-              child: const Column(
+              child: Column(
                 children: [
-                  MenuButton(icon: Icons.create_outlined, label: 'Cadastro'),
-                  MenuButton(icon: Icons.work, label: 'Fazendas'),
-                  MenuButton(icon: Icons.wallet, label: 'Gastos'),
-                  MenuButton(icon: Icons.water_drop, label: 'Sangrias')
+                  MenuButton(
+                    icon: Icons.create_outlined,
+                    label: 'Cadastro',
+                    onPressed: () => _onMenuButtonPressed(0),
+                  ),
+                  MenuButton(
+                    icon: Icons.work,
+                    label: 'Fazendas',
+                    onPressed: () => _onMenuButtonPressed(1),
+                  ),
+                  MenuButton(
+                    icon: Icons.wallet,
+                    label: 'Gastos',
+                    onPressed: () => _onMenuButtonPressed(2),
+                  ),
+                  MenuButton(
+                    icon: Icons.water_drop,
+                    label: 'Sangrias',
+                    onPressed: () => _onMenuButtonPressed(3),
+                  ),
                 ],
               ),
             ),
@@ -37,31 +67,53 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   const BarraDeAcao(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.844,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4, // 4 itens por linha
-                        mainAxisSpacing: 4.0, // Espaçamento entre linhas
-                        crossAxisSpacing: 4.0, // Espaçamento entre colunas
-                      ),
-                      itemCount: 12,
-                      itemBuilder: (context, index) {
-                        return const ServiceItem(
-                          itemText: 'Teste',
-                          value: 10.00,
-                        );
-                      },
+                  Expanded(
+                    child: IndexedStack(
+                      index: _selectedIndex,
+                      children: [
+                        _buildCadastroContent(),
+                        _buildFazendasContent(),
+                        _buildGastosContent(),
+                        _buildSangriasContent(),
+                      ],
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  // Conteúdo para cada botão do menu
+  Widget _buildCadastroContent() {
+    return const Center(child: Text("Conteúdo de Cadastro"));
+  }
+
+  Widget _buildFazendasContent() {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ),
+      itemCount: 12,
+      itemBuilder: (context, index) {
+        return const ServiceItem(
+          itemText: 'Fazenda',
+          value: 10.00,
+        );
+      },
+    );
+  }
+
+  Widget _buildGastosContent() {
+    return const Center(child: Text("Conteúdo de Gastos"));
+  }
+
+  Widget _buildSangriasContent() {
+    return const Center(child: Text("Conteúdo de Sangrias"));
   }
 }

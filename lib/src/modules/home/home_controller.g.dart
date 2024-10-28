@@ -43,6 +43,42 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
+  late final _$_farmsAtom =
+      Atom(name: 'HomeControllerBase._farms', context: context);
+
+  List<FarmModel> get farms {
+    _$_farmsAtom.reportRead();
+    return super._farms;
+  }
+
+  @override
+  List<FarmModel> get _farms => farms;
+
+  @override
+  set _farms(List<FarmModel> value) {
+    _$_farmsAtom.reportWrite(value, super._farms, () {
+      super._farms = value;
+    });
+  }
+
+  late final _$_filterNameAtom =
+      Atom(name: 'HomeControllerBase._filterName', context: context);
+
+  String? get filterName {
+    _$_filterNameAtom.reportRead();
+    return super._filterName;
+  }
+
+  @override
+  String? get _filterName => filterName;
+
+  @override
+  set _filterName(String? value) {
+    _$_filterNameAtom.reportWrite(value, super._filterName, () {
+      super._filterName = value;
+    });
+  }
+
   late final _$_errorMessageAtom =
       Atom(name: 'HomeControllerBase._errorMessage', context: context);
 
@@ -59,6 +95,14 @@ mixin _$HomeController on HomeControllerBase, Store {
     _$_errorMessageAtom.reportWrite(value, super._errorMessage, () {
       super._errorMessage = value;
     });
+  }
+
+  late final _$getAllFarmsAsyncAction =
+      AsyncAction('HomeControllerBase.getAllFarms', context: context);
+
+  @override
+  Future<void> getAllFarms(FarmModel farm) {
+    return _$getAllFarmsAsyncAction.run(() => super.getAllFarms(farm));
   }
 
   @override

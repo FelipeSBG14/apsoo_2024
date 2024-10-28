@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class MenuButton extends StatelessWidget {
   final IconData icon;
   final String label;
-  const MenuButton({super.key, required this.icon, required this.label});
+  final VoidCallback? onPressed;
+  const MenuButton(
+      {super.key, required this.icon, required this.label, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class MenuButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.19,
         height: MediaQuery.of(context).size.height * 0.055,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: onPressed,
           child: Row(
             children: [
               Icon(

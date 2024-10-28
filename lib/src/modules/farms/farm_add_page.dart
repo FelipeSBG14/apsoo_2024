@@ -115,9 +115,6 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
       controller.addFarm(farm);
 
       // Feedback de sucesso ao usuário
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Formulário enviado com sucesso!')),
-      );
     }
   }
 
