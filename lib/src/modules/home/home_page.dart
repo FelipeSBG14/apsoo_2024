@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
-import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/core/widgets/barra_de_acao.dart';
 import 'package:trab_apsoo/src/core/widgets/menu_button.dart';
+import 'package:trab_apsoo/src/core/widgets/service_item.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -40,68 +40,22 @@ class HomePage extends StatelessWidget {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.844,
                     width: MediaQuery.of(context).size.width * 0.9,
-                    child: Center(
-                      child: InkWell(
-                        onTap: () {},
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(10)),
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          height: MediaQuery.of(context).size.height * 0.30,
-                          width: MediaQuery.of(context).size.width * 0.13,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.20,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.12,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10.0, top: 8),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Text',
-                                        style: context.textStyles.textRegular
-                                            .copyWith(
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 12,
-                                      ),
-                                      Text(
-                                        'R\$0,00',
-                                        style: context.textStyles.textRegular
-                                            .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4, // 4 itens por linha
+                        mainAxisSpacing: 4.0, // Espaçamento entre linhas
+                        crossAxisSpacing: 4.0, // Espaçamento entre colunas
                       ),
+                      itemCount: 12,
+                      itemBuilder: (context, index) {
+                        return const ServiceItem(
+                          itemText: 'Teste',
+                          value: 10.00,
+                        );
+                      },
                     ),
-                  )
+                  ),
                 ],
               ),
             )
