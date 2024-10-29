@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/debouncer.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with Loader, Messages {
   int _selectedIndex = 1; // Inicia na opção "Fazendas"
   final controller = Modular.get<HomeController>();
+  final debouncer = Debouncer(milisencods: 200);
   late final ReactionDisposer statusDisposer;
 
   // Função para definir o índice selecionado
@@ -115,7 +117,15 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
               flex: 8,
               child: Column(
                 children: [
-                  const BarraDeAcao(),
+                  BarraDeAcao(
+                    onChanged: (value) {
+                      debouncer.call(
+                        () {
+                          controller.filterByName(value);
+                        },
+                      );
+                    },
+                  ),
                   Expanded(
                     child: IndexedStack(
                       index: _selectedIndex,

@@ -4,7 +4,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
 
 class BarraDeAcao extends StatelessWidget {
-  const BarraDeAcao({super.key});
+  final Function(String)? onChanged;
+  const BarraDeAcao({super.key, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class BarraDeAcao extends StatelessWidget {
               width: context.screenWidht * 0.3,
               height: context.screenHeight * 0.3,
               child: TextFormField(
+                onChanged: onChanged,
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,

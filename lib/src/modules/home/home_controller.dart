@@ -53,4 +53,14 @@ abstract class HomeControllerBase with Store {
       _farmList = [];
     }
   }
+
+  @action
+  void filterByName(String name) {
+    _farmSearch = _farmList
+        ?.where(
+          (p) =>
+              (p.nome).trim().toUpperCase().contains(name.trim().toUpperCase()),
+        )
+        .toList();
+  }
 }

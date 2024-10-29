@@ -48,6 +48,7 @@ class ServiceItem extends StatelessWidget {
                     children: [
                       Text(
                         farm.nome,
+                        overflow: TextOverflow.ellipsis,
                         style: context.textStyles.textRegular.copyWith(
                           fontSize: 13,
                         ),
