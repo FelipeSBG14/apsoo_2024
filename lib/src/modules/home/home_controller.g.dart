@@ -43,21 +43,39 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
-  late final _$_farmsAtom =
-      Atom(name: 'HomeControllerBase._farms', context: context);
+  late final _$_farmListAtom =
+      Atom(name: 'HomeControllerBase._farmList', context: context);
 
-  List<FarmModel> get farms {
-    _$_farmsAtom.reportRead();
-    return super._farms;
+  List<FarmModel>? get farmList {
+    _$_farmListAtom.reportRead();
+    return super._farmList;
   }
 
   @override
-  List<FarmModel> get _farms => farms;
+  List<FarmModel>? get _farmList => farmList;
 
   @override
-  set _farms(List<FarmModel> value) {
-    _$_farmsAtom.reportWrite(value, super._farms, () {
-      super._farms = value;
+  set _farmList(List<FarmModel>? value) {
+    _$_farmListAtom.reportWrite(value, super._farmList, () {
+      super._farmList = value;
+    });
+  }
+
+  late final _$_farmSearchAtom =
+      Atom(name: 'HomeControllerBase._farmSearch', context: context);
+
+  List<FarmModel>? get farmSearch {
+    _$_farmSearchAtom.reportRead();
+    return super._farmSearch;
+  }
+
+  @override
+  List<FarmModel>? get _farmSearch => farmSearch;
+
+  @override
+  set _farmSearch(List<FarmModel>? value) {
+    _$_farmSearchAtom.reportWrite(value, super._farmSearch, () {
+      super._farmSearch = value;
     });
   }
 
@@ -101,8 +119,8 @@ mixin _$HomeController on HomeControllerBase, Store {
       AsyncAction('HomeControllerBase.getAllFarms', context: context);
 
   @override
-  Future<void> getAllFarms(FarmModel farm) {
-    return _$getAllFarmsAsyncAction.run(() => super.getAllFarms(farm));
+  Future<void> getAllFarms() {
+    return _$getAllFarmsAsyncAction.run(() => super.getAllFarms());
   }
 
   @override

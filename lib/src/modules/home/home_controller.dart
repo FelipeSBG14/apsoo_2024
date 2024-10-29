@@ -29,7 +29,10 @@ abstract class HomeControllerBase with Store {
   bool isLoading = false;
 
   @readonly
-  var _farms = <FarmModel>[];
+  List<FarmModel>? _farmList;
+
+  @readonly
+  List<FarmModel>? _farmSearch;
 
   @readonly
   String? _filterName;
@@ -38,14 +41,16 @@ abstract class HomeControllerBase with Store {
   String? _errorMessage;
 
   @action
-  Future<void> getAllFarms(FarmModel farm) async {
+  Future<void> getAllFarms() async {
     try {
       _homeStatus = HomeStateStatus.loading;
-      _farms = await _farmRepository.getFarms(_filterName);
-      _homeStatus = HomeStateStatus.loaded;
+      _farmList = await _farmRepository.getFarms(_filterName);
+      _farmSearch = _farmList;
+      _homeStatus = HomeStateStatus.success;
     } catch (e, s) {
       log('Erro ao buscar fazendas', error: e, stackTrace: s);
       _homeStatus = HomeStateStatus.error;
+      _farmList = [];
     }
   }
 }

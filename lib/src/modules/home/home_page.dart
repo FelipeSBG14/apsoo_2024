@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
 import 'package:trab_apsoo/src/core/widgets/barra_de_acao.dart';
 import 'package:trab_apsoo/src/core/widgets/menu_button.dart';
 import 'package:trab_apsoo/src/core/widgets/service_item.dart';
+import 'package:trab_apsoo/src/modules/home/home_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,14 +17,55 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with Loader, Messages {
   int _selectedIndex = 1; // Inicia na opção "Fazendas"
+  final controller = Modular.get<HomeController>();
+  late final ReactionDisposer statusDisposer;
 
   // Função para definir o índice selecionado
   void _onMenuButtonPressed(int index) {
     setState(() {
+      controller.getAllFarms();
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void dispose() {
+    statusDisposer();
+    super.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    controller.getAllFarms();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      statusDisposer = reaction(
+        (_) => controller.homeStatus,
+        (status) async {
+          switch (status) {
+            case HomeStateStatus.inital:
+              break;
+            case HomeStateStatus.loading:
+              showLoader();
+              break;
+            case HomeStateStatus.success:
+              hideLoader();
+            case HomeStateStatus.uploaded:
+              break;
+            case HomeStateStatus.loaded:
+              hideLoader();
+            case HomeStateStatus.addOrEdit:
+              break;
+            case HomeStateStatus.error:
+              showError('Erro ao buscar fazendas');
+              hideLoader();
+          }
+        },
+      );
+    });
+    super.initState();
   }
 
   @override
@@ -32,38 +79,40 @@ class _HomePageState extends State<HomePage> {
         height: context.screenLongestSide,
         child: Row(
           children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              width: context.screenWidht * 0.2,
-              height: context.screenHeight * 1,
-              child: Column(
-                children: [
-                  MenuButton(
-                    icon: Icons.create_outlined,
-                    label: 'Cadastro',
-                    onPressed: () => _onMenuButtonPressed(0),
-                  ),
-                  MenuButton(
-                    icon: Icons.work,
-                    label: 'Fazendas',
-                    onPressed: () => _onMenuButtonPressed(1),
-                  ),
-                  MenuButton(
-                    icon: Icons.wallet,
-                    label: 'Gastos',
-                    onPressed: () => _onMenuButtonPressed(2),
-                  ),
-                  MenuButton(
-                    icon: Icons.water_drop,
-                    label: 'Sangrias',
-                    onPressed: () => _onMenuButtonPressed(3),
-                  ),
-                ],
+            Flexible(
+              flex: 2,
+              child: Container(
+                alignment: Alignment.centerLeft,
+                width: context.screenWidht * 0.2,
+                height: context.screenHeight * 1,
+                child: Column(
+                  children: [
+                    MenuButton(
+                      icon: Icons.create_outlined,
+                      label: 'Cadastro',
+                      onPressed: () => _onMenuButtonPressed(0),
+                    ),
+                    MenuButton(
+                      icon: Icons.work,
+                      label: 'Fazendas',
+                      onPressed: () => _onMenuButtonPressed(1),
+                    ),
+                    MenuButton(
+                      icon: Icons.wallet,
+                      label: 'Gastos',
+                      onPressed: () => _onMenuButtonPressed(2),
+                    ),
+                    MenuButton(
+                      icon: Icons.water_drop,
+                      label: 'Sangrias',
+                      onPressed: () => _onMenuButtonPressed(3),
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 1,
+            Expanded(
+              flex: 8,
               child: Column(
                 children: [
                   const BarraDeAcao(),
@@ -72,7 +121,43 @@ class _HomePageState extends State<HomePage> {
                       index: _selectedIndex,
                       children: [
                         _buildCadastroContent(),
-                        _buildFazendasContent(),
+                        Observer(
+                          builder: (_) {
+                            return Visibility(
+                              visible: controller.homeStatus ==
+                                      HomeStateStatus.loading
+                                  ? false
+                                  : true,
+                              replacement: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              child: Expanded(
+                                child: Observer(
+                                  builder: (_) {
+                                    return controller.farmSearch!.isEmpty
+                                        ? const Text(
+                                            'Nenhuma fazenda encontrada')
+                                        : GridView.builder(
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 4,
+                                              mainAxisSpacing: 4.0,
+                                              crossAxisSpacing: 4.0,
+                                            ),
+                                            itemCount:
+                                                controller.farmSearch?.length,
+                                            itemBuilder: (context, index) {
+                                              return ServiceItem(
+                                                  farm: controller
+                                                      .farmSearch![index]);
+                                            },
+                                          );
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                         _buildGastosContent(),
                         _buildSangriasContent(),
                       ],
@@ -90,23 +175,6 @@ class _HomePageState extends State<HomePage> {
   // Conteúdo para cada botão do menu
   Widget _buildCadastroContent() {
     return const Center(child: Text("Conteúdo de Cadastro"));
-  }
-
-  Widget _buildFazendasContent() {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-      ),
-      itemCount: 12,
-      itemBuilder: (context, index) {
-        return const ServiceItem(
-          itemText: 'Fazenda',
-          value: 10.00,
-        );
-      },
-    );
   }
 
   Widget _buildGastosContent() {

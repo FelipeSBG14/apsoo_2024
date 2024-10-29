@@ -50,7 +50,7 @@ abstract class FarmControllerBase with Store {
   //     _farms = await _farmRepository.getFarms(_filterName);
   //     _status = FarmStateStatus.loaded;
   //   } catch (e, s) {
-  //     log('Erro ao buscar produtos', error: e, stackTrace: s);
+  //     log('Erro ao buscar fazendas', error: e, stackTrace: s);
   //     _status = FarmStateStatus.error;
   //   }
   // }
@@ -64,7 +64,7 @@ abstract class FarmControllerBase with Store {
       await _farmRepository.addOrEditFarms(farm);
       _status = FarmStateStatus.addOrUpdateFarm;
     } catch (e, s) {
-      log('Erro ao buscar produtos', error: e, stackTrace: s);
+      log('Erro ao adicionar fazendas', error: e, stackTrace: s);
       _status = FarmStateStatus.error;
     }
   }

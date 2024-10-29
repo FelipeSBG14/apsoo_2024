@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
+import 'package:trab_apsoo/src/models/farm/farm_model.dart';
 
 class ServiceItem extends StatelessWidget {
-  final String itemText;
-  final double value;
-  const ServiceItem({super.key, required this.itemText, required this.value});
+  final FarmModel farm;
+  const ServiceItem({super.key, required this.farm});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class ServiceItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        itemText,
+                        farm.nome,
                         style: context.textStyles.textRegular.copyWith(
                           fontSize: 13,
                         ),
@@ -56,7 +56,7 @@ class ServiceItem extends StatelessWidget {
                         height: 12,
                       ),
                       Text(
-                        'R\$ $value',
+                        'R\$ ${farm.valorTotal}',
                         style: context.textStyles.textRegular.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
