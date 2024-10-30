@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:trab_apsoo/src/models/gastos/diesel_model.dart';
 import 'package:trab_apsoo/src/models/gastos/gastos_model.dart';
 import 'package:trab_apsoo/src/models/gastos/sangria_model.dart';
@@ -88,9 +90,8 @@ class FarmModel {
       'municipio': municipio,
       'maquinario': maquinario,
       'ha': ha,
-      'startDate':
-          '${startDate!.toIso8601String()}Z', // Formata como ISO 8601 com sufixo 'Z'
-      'finalDate': '${finalDate!.toIso8601String()}Z',
+      'startDate': startDate?.millisecondsSinceEpoch,
+      'finalDate': finalDate?.millisecondsSinceEpoch,
       'nfCode': nfCode,
       'servicoName': servicoName,
       'servico': servico?.map((x) => x.toMap()).toList(),
@@ -116,7 +117,7 @@ class FarmModel {
       finalDate: map['finalDate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['finalDate'] as int)
           : null,
-      nfCode: map['nfCode'] as String,
+      nfCode: map['nfCode'] != null ? map['nfCode'] as String : null,
       servicoName:
           map['servicoName'] != null ? map['servicoName'] as String : null,
       servico: map['servico'] != null
@@ -158,4 +159,51 @@ class FarmModel {
 
   factory FarmModel.fromJson(String source) =>
       FarmModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'FarmModel(id: $id, enabled: $enabled, nome: $nome, municipio: $municipio, maquinario: $maquinario, ha: $ha, startDate: $startDate, finalDate: $finalDate, nfCode: $nfCode, servicoName: $servicoName, servico: $servico, valorTotal: $valorTotal, funcionarios: $funcionarios, gastos: $gastos, diesel: $diesel, sangrias: $sangrias)';
+  }
+
+  @override
+  bool operator ==(covariant FarmModel other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.enabled == enabled &&
+        other.nome == nome &&
+        other.municipio == municipio &&
+        other.maquinario == maquinario &&
+        other.ha == ha &&
+        other.startDate == startDate &&
+        other.finalDate == finalDate &&
+        other.nfCode == nfCode &&
+        other.servicoName == servicoName &&
+        listEquals(other.servico, servico) &&
+        other.valorTotal == valorTotal &&
+        other.funcionarios == funcionarios &&
+        listEquals(other.gastos, gastos) &&
+        listEquals(other.diesel, diesel) &&
+        listEquals(other.sangrias, sangrias);
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        enabled.hashCode ^
+        nome.hashCode ^
+        municipio.hashCode ^
+        maquinario.hashCode ^
+        ha.hashCode ^
+        startDate.hashCode ^
+        finalDate.hashCode ^
+        nfCode.hashCode ^
+        servicoName.hashCode ^
+        servico.hashCode ^
+        valorTotal.hashCode ^
+        funcionarios.hashCode ^
+        gastos.hashCode ^
+        diesel.hashCode ^
+        sangrias.hashCode;
+  }
 }

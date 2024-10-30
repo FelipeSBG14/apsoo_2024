@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -145,8 +146,10 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
                                 child: Observer(
                                   builder: (_) {
                                     return controller.farmSearch!.isEmpty
-                                        ? const Text(
-                                            'Nenhuma fazenda encontrada')
+                                        ? const Center(
+                                            child: Text(
+                                                'Nenhuma fazenda encontrada'),
+                                          )
                                         : GridView.builder(
                                             gridDelegate:
                                                 const SliverGridDelegateWithFixedCrossAxisCount(
