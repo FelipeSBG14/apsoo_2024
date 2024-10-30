@@ -112,17 +112,21 @@ class FarmModel {
       maquinario: map['maquinario'] as String,
       ha: map['ha'] != null ? map['ha'] as String : null,
       startDate: map['startDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int)
+          ? (map['startDate'] is int
+              ? DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int)
+              : DateTime.tryParse(map['startDate']))
           : null,
       finalDate: map['finalDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['finalDate'] as int)
+          ? (map['finalDate'] is int
+              ? DateTime.fromMillisecondsSinceEpoch(map['finalDate'] as int)
+              : DateTime.tryParse(map['finalDate']))
           : null,
       nfCode: map['nfCode'] != null ? map['nfCode'] as String : null,
       servicoName:
           map['servicoName'] != null ? map['servicoName'] as String : null,
       servico: map['servico'] != null
           ? List<ServicoModel>.from(
-              (map['servico'] as List<int>).map<ServicoModel?>(
+              (map['servico'] as List<dynamic>).map<ServicoModel?>(
                 (x) => ServicoModel.fromMap(x as Map<String, dynamic>),
               ),
             )
@@ -133,21 +137,21 @@ class FarmModel {
           map['funcionarios'] != null ? map['funcionarios'] as String : null,
       gastos: map['gastos'] != null
           ? List<GastosModel>.from(
-              (map['gastos'] as List<int>).map<GastosModel?>(
+              (map['gastos'] as List<dynamic>).map<GastosModel?>(
                 (x) => GastosModel.fromMap(x as Map<String, dynamic>),
               ),
             )
           : null,
       diesel: map['diesel'] != null
           ? List<DieselModel>.from(
-              (map['diesel'] as List<int>).map<DieselModel?>(
+              (map['diesel'] as List<dynamic>).map<DieselModel?>(
                 (x) => DieselModel.fromMap(x as Map<String, dynamic>),
               ),
             )
           : null,
       sangrias: map['sangrias'] != null
           ? List<SangriaModel>.from(
-              (map['sangrias'] as List<int>).map<SangriaModel?>(
+              (map['sangrias'] as List<dynamic>).map<SangriaModel?>(
                 (x) => SangriaModel.fromMap(x as Map<String, dynamic>),
               ),
             )

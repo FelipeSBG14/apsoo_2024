@@ -36,6 +36,10 @@ class ServiceItem extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.20,
                   width: MediaQuery.of(context).size.width * 0.12,
                   color: Colors.blueGrey,
+                  child: Image.asset(
+                    'assets/images/fazendaFeliz.png',
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               Padding(

@@ -61,51 +61,10 @@ class FarmRepositoryImpl implements FarmRepository {
           'enabled': true,
         },
       );
-      // if (response.data != null) {
-      //   response.data.forEach(
-      //     (farmData) {
-      //       farmsList.add(
-      //         FarmModel(
-      //           id: farmData['id'] != null ? farmData['id'] as int : null,
-      //           enabled: farmData['enabled'] as bool,
-      //           nome: farmData['nome'] as String,
-      //           municipio: farmData['municipio'] as String,
-      //           maquinario: farmData['maquinario'] as String,
-      //           ha: farmData['ha'] != null ? farmData['ha'] as String : null,
-      //           startDate: farmData['startDate'] != null
-      //               ? (farmData['startDate'] is int
-      //                   ? DateTime.fromMillisecondsSinceEpoch(
-      //                       farmData['startDate'] as int)
-      //                   : DateTime.parse(farmData['startDate'] as String))
-      //               : null,
-      //           finalDate: farmData['finalDate'] != null
-      //               ? (farmData['finalDate'] is int
-      //                   ? DateTime.fromMillisecondsSinceEpoch(
-      //                       farmData['finalDate'] as int)
-      //                   : DateTime.parse(farmData['finalDate'] as String))
-      //               : null,
-      //           nfCode: farmData['nfCode'] != null
-      //               ? farmData['nfCode'] as String
-      //               : null,
-      //           servicoName: farmData['servicoName'] != null
-      //               ? farmData['servicoName'] as String
-      //               : null,
-      //           valorTotal: farmData['valorTotal'] != null
-      //               ? farmData['valorTotal'] as double
-      //               : null,
-      //           funcionarios: farmData['funcionarios'] != null
-      //               ? farmData['funcionarios'] as String
-      //               : null,
-      //         ),
-      //       );
-      //     },
-      //   );
-      // }
-      farmsList = (response.data as List)
+      farmsList = (response.data)
           .map<FarmModel>(
               (farmData) => FarmModel.fromMap(farmData as Map<String, dynamic>))
           .toList();
-
       return farmsList;
     } on DioException catch (e, s) {
       log('Erro ao buscar fazendas', error: e, stackTrace: s);
