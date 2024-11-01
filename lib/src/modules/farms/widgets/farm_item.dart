@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/models/farm/farm_model.dart';
 
-class ServiceItem extends StatelessWidget {
+class FarmItem extends StatelessWidget {
   final FarmModel farm;
-  const ServiceItem({super.key, required this.farm});
+  const FarmItem({super.key, required this.farm});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ServiceItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.20,
+                  height: MediaQuery.of(context).size.height * 0.25,
                   width: MediaQuery.of(context).size.width * 0.12,
                   color: Colors.blueGrey,
                   child: Image.asset(

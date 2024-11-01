@@ -8,7 +8,8 @@ import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
 import 'package:trab_apsoo/src/core/widgets/barra_de_acao.dart';
 import 'package:trab_apsoo/src/core/widgets/menu_button.dart';
-import 'package:trab_apsoo/src/core/widgets/service_item.dart';
+import 'package:trab_apsoo/src/modules/farms/widgets/farm_item.dart';
+import 'package:trab_apsoo/src/modules/gastos/widgets/gasto_item.dart';
 import 'package:trab_apsoo/src/modules/home/home_controller.dart';
 
 class HomePage extends StatefulWidget {
@@ -160,7 +161,7 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
                                             itemCount:
                                                 controller.farmSearch?.length,
                                             itemBuilder: (context, index) {
-                                              return ServiceItem(
+                                              return FarmItem(
                                                   farm: controller
                                                       .farmSearch![index]);
                                             },
@@ -191,7 +192,7 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
   }
 
   Widget _buildGastosContent() {
-    return const Center(child: Text("Conteúdo de Gastos"));
+    return const GastoItem();
   }
 
   Widget _buildSangriasContent() {
