@@ -42,6 +42,7 @@ class DieselModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'farmId': farmId,
       'date': date?.millisecondsSinceEpoch,
       'nfCode': nfCode,
       'razao': razao,

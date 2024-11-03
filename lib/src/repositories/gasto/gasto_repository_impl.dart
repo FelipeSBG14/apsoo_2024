@@ -66,4 +66,22 @@ class GastoRepositoryImpl implements GastoRepository {
       throw RepositoryException(message: 'Erro ao buscar gastos');
     }
   }
+
+  @override
+  Future<List<GastosModel>> getGastosByFarmId(int? farmId) async {
+    try {
+      final response = await _dio.get(
+        '/gastos',
+        queryParameters: {
+          'farmId': farmId,
+        },
+      );
+      return (response.data as List)
+          .map((gastoData) => GastosModel.fromMap(gastoData))
+          .toList();
+    } on DioException catch (e, s) {
+      log('Erro ao buscar gastos por farmId', error: e, stackTrace: s);
+      throw RepositoryException(message: 'Erro ao buscar gastos por farmId');
+    }
+  }
 }

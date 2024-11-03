@@ -32,6 +32,9 @@ abstract class GastoControllerBase with Store {
   var _gastos = <GastosModel>[];
 
   @readonly
+  List<GastosModel> _gastosByFarm = [];
+
+  @readonly
   var _farms = <FarmModel>[];
 
   @readonly

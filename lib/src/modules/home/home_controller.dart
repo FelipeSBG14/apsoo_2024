@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:mobx/mobx.dart';
 import 'package:trab_apsoo/src/models/farm/farm_model.dart';
+import 'package:trab_apsoo/src/models/gastos/diesel_model.dart';
 import 'package:trab_apsoo/src/models/gastos/gastos_model.dart';
 import 'package:trab_apsoo/src/models/gastos/sangria_model.dart';
+import 'package:trab_apsoo/src/repositories/diesel/diesel_repository.dart';
 import 'package:trab_apsoo/src/repositories/farm/farm_repository.dart';
 import 'package:trab_apsoo/src/repositories/gasto/gasto_repository.dart';
 import 'package:trab_apsoo/src/repositories/sangria/sangria_repository.dart';
@@ -25,11 +27,13 @@ abstract class HomeControllerBase with Store {
   final FarmRepository _farmRepository;
   final GastoRepository _gastosRepository;
   final SangriaRepository _sangriaRepository;
+  final DieselRepository _dieselRepository;
 
   HomeControllerBase(
     this._farmRepository,
     this._gastosRepository,
     this._sangriaRepository,
+    this._dieselRepository,
   );
   @readonly
   HomeStateStatus _homeStatus = HomeStateStatus.inital;
@@ -47,6 +51,9 @@ abstract class HomeControllerBase with Store {
   List<SangriaModel>? _sangriasList;
 
   @readonly
+  List<DieselModel>? _dieselList;
+
+  @readonly
   List<FarmModel>? _farmSearch;
 
   @readonly
@@ -54,6 +61,9 @@ abstract class HomeControllerBase with Store {
 
   @readonly
   List<SangriaModel>? _sangriasSearch;
+
+  @readonly
+  List<DieselModel>? _dieselSearch;
 
   @readonly
   String? _filterName;
@@ -99,7 +109,21 @@ abstract class HomeControllerBase with Store {
     } catch (e, s) {
       log('Erro ao buscar sangrias', error: e, stackTrace: s);
       _homeStatus = HomeStateStatus.error;
-      _gastosList = [];
+      _sangriasList = [];
+    }
+  }
+
+  @action
+  Future<void> getAllDiesel() async {
+    try {
+      _homeStatus = HomeStateStatus.loading;
+      _dieselList = await _dieselRepository.getDiesels(_filterName);
+      _dieselSearch = _dieselList;
+      _homeStatus = HomeStateStatus.success;
+    } catch (e, s) {
+      log('Erro ao buscar diesels', error: e, stackTrace: s);
+      _homeStatus = HomeStateStatus.error;
+      _dieselList = [];
     }
   }
 
@@ -125,6 +149,19 @@ abstract class HomeControllerBase with Store {
       _homeStatus = HomeStateStatus.success;
     } catch (e, s) {
       log('Erro ao deletar sangrias', error: e, stackTrace: s);
+      _homeStatus = HomeStateStatus.error;
+    }
+  }
+
+  @action
+  Future<void> deleteDiesel(int id) async {
+    try {
+      _homeStatus = HomeStateStatus.loading;
+      await _dieselRepository.dieselDelete(id);
+      await getAllFarms();
+      _homeStatus = HomeStateStatus.success;
+    } catch (e, s) {
+      log('Erro ao deletar diesels', error: e, stackTrace: s);
       _homeStatus = HomeStateStatus.error;
     }
   }
@@ -164,6 +201,18 @@ abstract class HomeControllerBase with Store {
   }
 
   @action
+  void filterDieselByName(String name) {
+    _dieselSearch = _dieselList
+        ?.where(
+          (p) => (p.razao)
+              .trim()
+              .toUpperCase()
+              .contains(name.trim().toUpperCase()),
+        )
+        .toList();
+  }
+
+  @action
   void filterGastosByFazenda(int farmId) {
     _gastosSearch =
         _gastosList?.where((gasto) => gasto.farmId == farmId).toList() ?? [];
@@ -185,6 +234,19 @@ abstract class HomeControllerBase with Store {
     // Se a lista estiver vazia, talvez queira também emitir uma mensagem
     if (_sangriasSearch!.isEmpty) {
       _errorMessage = "Nenhuma sangria encontrada para esta fazenda.";
+    } else {
+      _errorMessage = null; // Reseta a mensagem de erro se houver resultados
+    }
+  }
+
+  @action
+  void filterDieselByFazenda(int farmId) {
+    _dieselSearch =
+        _dieselList?.where((diesel) => diesel.farmId == farmId).toList() ?? [];
+
+    // Se a lista estiver vazia, talvez queira também emitir uma mensagem
+    if (_dieselSearch!.isEmpty) {
+      _errorMessage = "Nenhum diesel encontrado para esta fazenda.";
     } else {
       _errorMessage = null; // Reseta a mensagem de erro se houver resultados
     }

@@ -66,4 +66,22 @@ class SangriaRepositoryImpl implements SangriaRepository {
       throw RepositoryException(message: 'Erro ao buscar Sangrias');
     }
   }
+
+  @override
+  Future<List<SangriaModel>> getSangriaByFarmId(int? farmId) async {
+    try {
+      final response = await _dio.get(
+        '/sangria',
+        queryParameters: {
+          'farmId': farmId,
+        },
+      );
+      return (response.data as List)
+          .map((sangriaData) => SangriaModel.fromMap(sangriaData))
+          .toList();
+    } on DioException catch (e, s) {
+      log('Erro ao buscar sangria por farmId', error: e, stackTrace: s);
+      throw RepositoryException(message: 'Erro ao buscar sangria por farmId');
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/models/farm/farm_model.dart';
 
@@ -10,7 +11,9 @@ class FarmItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Modular.to.pushNamed('/newFarm/farmPage', arguments: farm);
+        },
         splashColor: Colors.blueAccent.withOpacity(1),
         highlightColor: Colors.blueAccent.withOpacity(1),
         borderRadius: BorderRadius.circular(10),
@@ -37,8 +40,8 @@ class FarmItem extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.12,
                   color: Colors.blueGrey,
                   child: Image.asset(
-                    'assets/images/fazendaFeliz.png',
-                    fit: BoxFit.fill,
+                    'assets/images/fazenda.jpg',
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
               ),
@@ -59,6 +62,13 @@ class FarmItem extends StatelessWidget {
                       ),
                       const SizedBox(
                         height: 12,
+                      ),
+                      Text(
+                        'Valor do Serviço',
+                        style: context.textStyles.textRegular.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                       ),
                       Text(
                         'R\$ ${farm.valorTotal}',

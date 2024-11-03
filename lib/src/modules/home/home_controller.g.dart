@@ -97,6 +97,24 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
+  late final _$_dieselListAtom =
+      Atom(name: 'HomeControllerBase._dieselList', context: context);
+
+  List<DieselModel>? get dieselList {
+    _$_dieselListAtom.reportRead();
+    return super._dieselList;
+  }
+
+  @override
+  List<DieselModel>? get _dieselList => dieselList;
+
+  @override
+  set _dieselList(List<DieselModel>? value) {
+    _$_dieselListAtom.reportWrite(value, super._dieselList, () {
+      super._dieselList = value;
+    });
+  }
+
   late final _$_farmSearchAtom =
       Atom(name: 'HomeControllerBase._farmSearch', context: context);
 
@@ -148,6 +166,24 @@ mixin _$HomeController on HomeControllerBase, Store {
   set _sangriasSearch(List<SangriaModel>? value) {
     _$_sangriasSearchAtom.reportWrite(value, super._sangriasSearch, () {
       super._sangriasSearch = value;
+    });
+  }
+
+  late final _$_dieselSearchAtom =
+      Atom(name: 'HomeControllerBase._dieselSearch', context: context);
+
+  List<DieselModel>? get dieselSearch {
+    _$_dieselSearchAtom.reportRead();
+    return super._dieselSearch;
+  }
+
+  @override
+  List<DieselModel>? get _dieselSearch => dieselSearch;
+
+  @override
+  set _dieselSearch(List<DieselModel>? value) {
+    _$_dieselSearchAtom.reportWrite(value, super._dieselSearch, () {
+      super._dieselSearch = value;
     });
   }
 
@@ -211,6 +247,14 @@ mixin _$HomeController on HomeControllerBase, Store {
     return _$getAllSangriasAsyncAction.run(() => super.getAllSangrias());
   }
 
+  late final _$getAllDieselAsyncAction =
+      AsyncAction('HomeControllerBase.getAllDiesel', context: context);
+
+  @override
+  Future<void> getAllDiesel() {
+    return _$getAllDieselAsyncAction.run(() => super.getAllDiesel());
+  }
+
   late final _$deleteGastoAsyncAction =
       AsyncAction('HomeControllerBase.deleteGasto', context: context);
 
@@ -225,6 +269,14 @@ mixin _$HomeController on HomeControllerBase, Store {
   @override
   Future<void> deleteSangria(int id) {
     return _$deleteSangriaAsyncAction.run(() => super.deleteSangria(id));
+  }
+
+  late final _$deleteDieselAsyncAction =
+      AsyncAction('HomeControllerBase.deleteDiesel', context: context);
+
+  @override
+  Future<void> deleteDiesel(int id) {
+    return _$deleteDieselAsyncAction.run(() => super.deleteDiesel(id));
   }
 
   late final _$HomeControllerBaseActionController =
@@ -264,6 +316,17 @@ mixin _$HomeController on HomeControllerBase, Store {
   }
 
   @override
+  void filterDieselByName(String name) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.filterDieselByName');
+    try {
+      return super.filterDieselByName(name);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void filterGastosByFazenda(int farmId) {
     final _$actionInfo = _$HomeControllerBaseActionController.startAction(
         name: 'HomeControllerBase.filterGastosByFazenda');
@@ -280,6 +343,17 @@ mixin _$HomeController on HomeControllerBase, Store {
         name: 'HomeControllerBase.filterSangriaByFazenda');
     try {
       return super.filterSangriaByFazenda(farmId);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterDieselByFazenda(int farmId) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.filterDieselByFazenda');
+    try {
+      return super.filterDieselByFazenda(farmId);
     } finally {
       _$HomeControllerBaseActionController.endAction(_$actionInfo);
     }
