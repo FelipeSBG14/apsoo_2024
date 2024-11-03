@@ -79,6 +79,24 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
+  late final _$_sangriasListAtom =
+      Atom(name: 'HomeControllerBase._sangriasList', context: context);
+
+  List<SangriaModel>? get sangriasList {
+    _$_sangriasListAtom.reportRead();
+    return super._sangriasList;
+  }
+
+  @override
+  List<SangriaModel>? get _sangriasList => sangriasList;
+
+  @override
+  set _sangriasList(List<SangriaModel>? value) {
+    _$_sangriasListAtom.reportWrite(value, super._sangriasList, () {
+      super._sangriasList = value;
+    });
+  }
+
   late final _$_farmSearchAtom =
       Atom(name: 'HomeControllerBase._farmSearch', context: context);
 
@@ -112,6 +130,24 @@ mixin _$HomeController on HomeControllerBase, Store {
   set _gastosSearch(List<GastosModel>? value) {
     _$_gastosSearchAtom.reportWrite(value, super._gastosSearch, () {
       super._gastosSearch = value;
+    });
+  }
+
+  late final _$_sangriasSearchAtom =
+      Atom(name: 'HomeControllerBase._sangriasSearch', context: context);
+
+  List<SangriaModel>? get sangriasSearch {
+    _$_sangriasSearchAtom.reportRead();
+    return super._sangriasSearch;
+  }
+
+  @override
+  List<SangriaModel>? get _sangriasSearch => sangriasSearch;
+
+  @override
+  set _sangriasSearch(List<SangriaModel>? value) {
+    _$_sangriasSearchAtom.reportWrite(value, super._sangriasSearch, () {
+      super._sangriasSearch = value;
     });
   }
 
@@ -167,12 +203,28 @@ mixin _$HomeController on HomeControllerBase, Store {
     return _$getAllGastosAsyncAction.run(() => super.getAllGastos());
   }
 
+  late final _$getAllSangriasAsyncAction =
+      AsyncAction('HomeControllerBase.getAllSangrias', context: context);
+
+  @override
+  Future<void> getAllSangrias() {
+    return _$getAllSangriasAsyncAction.run(() => super.getAllSangrias());
+  }
+
   late final _$deleteGastoAsyncAction =
       AsyncAction('HomeControllerBase.deleteGasto', context: context);
 
   @override
   Future<void> deleteGasto(int id) {
     return _$deleteGastoAsyncAction.run(() => super.deleteGasto(id));
+  }
+
+  late final _$deleteSangriaAsyncAction =
+      AsyncAction('HomeControllerBase.deleteSangria', context: context);
+
+  @override
+  Future<void> deleteSangria(int id) {
+    return _$deleteSangriaAsyncAction.run(() => super.deleteSangria(id));
   }
 
   late final _$HomeControllerBaseActionController =
@@ -201,11 +253,33 @@ mixin _$HomeController on HomeControllerBase, Store {
   }
 
   @override
-  void filterByFazenda(int farmId) {
+  void filterSangriaByName(String name) {
     final _$actionInfo = _$HomeControllerBaseActionController.startAction(
-        name: 'HomeControllerBase.filterByFazenda');
+        name: 'HomeControllerBase.filterSangriaByName');
     try {
-      return super.filterByFazenda(farmId);
+      return super.filterSangriaByName(name);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterGastosByFazenda(int farmId) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.filterGastosByFazenda');
+    try {
+      return super.filterGastosByFazenda(farmId);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterSangriaByFazenda(int farmId) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.filterSangriaByFazenda');
+    try {
+      return super.filterSangriaByFazenda(farmId);
     } finally {
       _$HomeControllerBaseActionController.endAction(_$actionInfo);
     }

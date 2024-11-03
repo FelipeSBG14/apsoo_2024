@@ -46,7 +46,7 @@ class BarraDeAcao extends StatelessWidget {
                     Modular.to.pushNamed('/newGasto/');
                   }
                   if (index == 2) {
-                    Modular.to.pushNamed('/newFarm/');
+                    Modular.to.pushNamed('/newSangria/');
                   }
                   if (index == 3) {
                     Modular.to.pushNamed('/newFarm/');

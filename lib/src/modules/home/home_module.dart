@@ -3,6 +3,8 @@ import 'package:trab_apsoo/src/repositories/farm/farm_repository.dart';
 import 'package:trab_apsoo/src/repositories/farm/farm_repository_impl.dart';
 import 'package:trab_apsoo/src/repositories/gasto/gasto_repository.dart';
 import 'package:trab_apsoo/src/repositories/gasto/gasto_repository_impl.dart';
+import 'package:trab_apsoo/src/repositories/sangria/sangria_repository.dart';
+import 'package:trab_apsoo/src/repositories/sangria/sangria_repository_impl.dart';
 import '../core/core_module.dart';
 import 'home_controller.dart';
 import 'home_page.dart';
@@ -14,6 +16,7 @@ class HomeModule extends Module {
     i.addLazySingleton<HomeController>(HomeController.new);
     i.addLazySingleton<FarmRepository>(FarmRepositoryImpl.new);
     i.addLazySingleton<GastoRepository>(GastoRepositoryImpl.new);
+    i.addLazySingleton<SangriaRepository>(SangriaRepositoryImpl.new);
   }
 
   @override

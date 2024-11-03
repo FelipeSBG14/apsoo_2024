@@ -11,6 +11,7 @@ import 'package:trab_apsoo/src/core/widgets/menu_button.dart';
 import 'package:trab_apsoo/src/modules/farms/widgets/farm_item.dart';
 import 'package:trab_apsoo/src/modules/gastos/widgets/gasto_item.dart';
 import 'package:trab_apsoo/src/modules/home/home_controller.dart';
+import 'package:trab_apsoo/src/modules/sangrias/widgets/sangria_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -62,6 +63,7 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
   void initState() {
     controller.getAllFarms().then((_) {
       controller.getAllGastos();
+      controller.getAllSangrias();
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       statusDisposer = reaction(
@@ -146,6 +148,9 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
                           }
                           if (_selectedIndex == 1) {
                             controller.filterGastoByName(value);
+                          }
+                          if (_selectedIndex == 2) {
+                            controller.filterSangriaByName(value);
                           }
                         },
                       );
@@ -237,7 +242,7 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
                       setState(() {
                         selectedFarmId = value;
                         if (value != null) {
-                          controller.filterByFazenda(value);
+                          controller.filterGastosByFazenda(value);
                         } else {
                           controller
                               .getAllGastos(); // Restaura a lista completa
@@ -305,6 +310,96 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
   }
 
   Widget _buildSangriasContent() {
-    return const Center(child: Text("Conteúdo de Sangrias"));
+    return Column(
+      children: [
+        Observer(
+          builder: (_) {
+            return Visibility(
+              visible: controller.homeStatus == HomeStateStatus.loading
+                  ? false
+                  : true,
+              replacement: const Center(child: CircularProgressIndicator()),
+              child: Stack(
+                alignment: Alignment.centerRight,
+                children: [
+                  DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(),
+                    hint: const Text('Filtrar Por Fazenda'),
+                    value: selectedFarmId,
+                    items: controller.farmList?.map((farm) {
+                      return DropdownMenuItem<int>(
+                        value: farm.id,
+                        child: Text(farm.nome), // Nome da fazenda
+                      );
+                    }).toList(),
+                    onChanged: (int? value) {
+                      setState(() {
+                        selectedFarmId = value;
+                        if (value != null) {
+                          controller.filterSangriaByFazenda(value);
+                        } else {
+                          controller
+                              .getAllSangrias(); // Restaura a lista completa
+                        }
+                      });
+                    },
+                    validator: (value) => value == null
+                        ? 'Por favor, selecione uma fazenda'
+                        : null,
+                  ),
+                  if (selectedFarmId != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 40.0),
+                      child: IconButton(
+                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        onPressed: () {
+                          setState(() {
+                            selectedFarmId = null;
+                            controller
+                                .getAllSangrias(); // Restaura a lista completa
+                          });
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+        Observer(
+          builder: (_) {
+            return Visibility(
+              visible: controller.homeStatus == HomeStateStatus.loading
+                  ? false
+                  : true,
+              replacement: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              child: Expanded(
+                child: Observer(
+                  builder: (_) {
+                    return controller.sangriasSearch!.isEmpty
+                        ? const Center(
+                            child: Text('Nenhuma sangria encontradoa'),
+                          )
+                        : ListView.builder(
+                            itemCount: controller.sangriasSearch?.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: SangriaItem(
+                                    controller: controller,
+                                    sangria: controller.sangriasSearch![index]),
+                              );
+                            },
+                          );
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
   }
 }
