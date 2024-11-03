@@ -17,7 +17,7 @@ class SangriaItem extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return ModalExclusao(
-          message: 'Tem certeza que deseja excluir esse sangria ?',
+          message: 'Tem certeza que deseja excluir essa sangria ?',
           onPressed: () async {
             await controller.deleteSangria(sangria.id!);
             await controller.getAllSangrias();
