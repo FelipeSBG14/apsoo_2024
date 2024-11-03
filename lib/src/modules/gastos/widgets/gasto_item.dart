@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
+import 'package:trab_apsoo/src/core/widgets/modal_exclusao.dart';
+import 'package:trab_apsoo/src/models/gastos/gastos_model.dart';
+import 'package:trab_apsoo/src/modules/home/home_controller.dart';
 
 class GastoItem extends StatelessWidget {
-  const GastoItem({super.key});
+  final HomeController controller;
+  final GastosModel gasto;
+  const GastoItem({super.key, required this.gasto, required this.controller});
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ModalExclusao(
+          message: 'Tem certeza que deseja excluir esse gasto ?',
+          onPressed: () async {
+            await controller.deleteGasto(gasto.id!);
+            await controller.getAllGastos();
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pop(); // Fecha o modal após a confirmação
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +58,21 @@ class GastoItem extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      Text(
-                        'Salário',
-                        style: TextStyles.i.textTitle.copyWith(
-                          fontWeight: FontWeight.bold,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          gasto.descricao,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyles.i.textTitle.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
                       Text(
-                        'Salário pago para Alexandre Júlio',
+                        gasto.date!.toIso8601String().split('T')[0],
                         style: TextStyles.i.textRegular.copyWith(
                           fontWeight: FontWeight.w300,
                           color: Colors.grey,
@@ -54,7 +82,7 @@ class GastoItem extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        'Valor: RS 200.66',
+                        'Valor: R\$ ${gasto.value}',
                         style: TextStyles.i.textRegular.copyWith(
                           color: const Color.fromARGB(255, 80, 79, 79),
                           fontWeight: FontWeight.bold,
@@ -73,13 +101,19 @@ class GastoItem extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _showDeleteConfirmation(context);
+                      },
                       icon: const Icon(
                         Icons.delete_forever_outlined,
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          Modular.to.pushNamed('/newGasto/', arguments: gasto);
+                        });
+                      },
                       icon: const Icon(
                         Icons.edit_outlined,
                       ),

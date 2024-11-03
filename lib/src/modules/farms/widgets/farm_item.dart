@@ -26,7 +26,7 @@ class FarmItem extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-          height: MediaQuery.of(context).size.height * 0.30,
+          height: MediaQuery.of(context).size.height * 0.35,
           width: MediaQuery.of(context).size.width * 0.13,
           child: Column(
             children: [

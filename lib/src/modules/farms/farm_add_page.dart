@@ -4,8 +4,9 @@ import 'package:mobx/mobx.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
-import 'package:trab_apsoo/src/core/widgets/farm_input.dart';
+import 'package:trab_apsoo/src/core/widgets/general_input.dart';
 import 'package:trab_apsoo/src/modules/farms/farm_controller.dart';
+import 'package:trab_apsoo/src/modules/home/home_controller.dart';
 import 'package:validatorless/validatorless.dart';
 
 import '../../models/farm/farm_model.dart';
@@ -19,6 +20,7 @@ class FarmAddPage extends StatefulWidget {
 
 class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
   final controller = Modular.get<FarmController>();
+  final homeController = Modular.get<HomeController>();
   late final ReactionDisposer statusDisposer;
   final formKey = GlobalKey<FormState>();
   final enabledEC = TextEditingController();
@@ -70,6 +72,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
               break;
             case FarmStateStatus.addOrUpdateFarm:
               showSuccess('SUCESSO');
+              homeController.getAllFarms();
               hideLoader();
               break;
           }
@@ -92,6 +95,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
             content: Text('A data de início deve ser anterior à data final.'),
           ),
         );
+
         return;
       }
 
@@ -157,7 +161,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       children: [
                         SizedBox(
                           width: context.screenWidht * 0.3,
-                          child: FarmInput(
+                          child: GeneralInput(
                             label: 'Nome da Fazenda',
                             hint: 'Insira o Nome da Fazenda',
                             controller: nomeEC,
@@ -167,7 +171,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                         ),
                         SizedBox(
                           width: context.screenWidht * 0.4,
-                          child: FarmInput(
+                          child: GeneralInput(
                             label: 'Município',
                             hint: 'Insira o Município',
                             controller: municipioEC,
@@ -179,7 +183,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    FarmInput(
+                    GeneralInput(
                       label: 'Maquinário',
                       hint: 'Insira o Maquinário',
                       controller: maquinarioEC,
@@ -188,7 +192,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    FarmInput(
+                    GeneralInput(
                       label: 'Hectares',
                       hint: 'Insira a área em hectares',
                       controller: haEC,
@@ -197,7 +201,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                     GestureDetector(
                       onTap: () => _selectDate(startDateEC),
                       child: AbsorbPointer(
-                        child: FarmInput(
+                        child: GeneralInput(
                           label: 'Data de Início',
                           hint: 'Insira a Data de Início',
                           controller: startDateEC,
@@ -210,7 +214,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                     GestureDetector(
                       onTap: () => _selectDate(finalDateEC),
                       child: AbsorbPointer(
-                        child: FarmInput(
+                        child: GeneralInput(
                           label: 'Data Final',
                           hint: 'Insira a Data Final',
                           controller: finalDateEC,
@@ -220,19 +224,19 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    FarmInput(
+                    GeneralInput(
                       label: 'Código NF',
                       hint: 'Insira o Código da Nota Fiscal',
                       controller: nfCodeEC,
                     ),
                     const SizedBox(height: 30),
-                    FarmInput(
+                    GeneralInput(
                       label: 'Serviço',
                       hint: 'Insira o Nome do Serviço',
                       controller: servicoNameEC,
                     ),
                     const SizedBox(height: 30),
-                    FarmInput(
+                    GeneralInput(
                       label: 'Valor Total',
                       hint: 'Insira o Valor Total',
                       inputType: TextInputType.number,
@@ -245,7 +249,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    FarmInput(
+                    GeneralInput(
                       label: 'Funcionários',
                       hint: 'Insira os Nomes dos Funcionários',
                       controller: funcionariosEC,

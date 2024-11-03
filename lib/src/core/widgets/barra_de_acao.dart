@@ -4,8 +4,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
 
 class BarraDeAcao extends StatelessWidget {
+  final int index;
   final Function(String)? onChanged;
-  const BarraDeAcao({super.key, this.onChanged});
+  const BarraDeAcao({super.key, this.onChanged, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,18 @@ class BarraDeAcao extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 SchedulerBinding.instance.addPostFrameCallback((_) {
-                  Modular.to.pushNamed('/newFarm/');
+                  if (index == 0) {
+                    Modular.to.pushNamed('/newFarm/');
+                  }
+                  if (index == 1) {
+                    Modular.to.pushNamed('/newGasto/');
+                  }
+                  if (index == 2) {
+                    Modular.to.pushNamed('/newFarm/');
+                  }
+                  if (index == 3) {
+                    Modular.to.pushNamed('/newFarm/');
+                  }
                 });
               },
               style: ElevatedButton.styleFrom(

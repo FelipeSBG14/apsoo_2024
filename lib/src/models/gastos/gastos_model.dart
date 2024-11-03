@@ -3,11 +3,13 @@ import 'dart:convert';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class GastosModel {
   final int? id;
+  final int farmId;
   final DateTime? date;
   final String descricao;
   final double value;
   GastosModel({
     this.id,
+    required this.farmId,
     this.date,
     required this.descricao,
     required this.value,
@@ -15,12 +17,14 @@ class GastosModel {
 
   GastosModel copyWith({
     int? id,
+    int? farmId,
     DateTime? date,
     String? descricao,
     double? value,
   }) {
     return GastosModel(
       id: id ?? this.id,
+      farmId: farmId ?? this.farmId,
       date: date ?? this.date,
       descricao: descricao ?? this.descricao,
       value: value ?? this.value,
@@ -30,6 +34,7 @@ class GastosModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'farmId': farmId,
       'date': date?.millisecondsSinceEpoch,
       'descricao': descricao,
       'value': value,
@@ -39,6 +44,7 @@ class GastosModel {
   factory GastosModel.fromMap(Map<String, dynamic> map) {
     return GastosModel(
       id: map['id'] != null ? map['id'] as int : null,
+      farmId: map['farmId'] as int,
       date: map['date'] != null
           ? (map['date'] is int
               ? DateTime.fromMillisecondsSinceEpoch(map['date'] as int)

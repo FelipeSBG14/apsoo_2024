@@ -21,8 +21,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with Loader, Messages {
-  int _selectedIndex = 1; // Inicia na opção "Fazendas"
+  int _selectedIndex = 0; // Inicia na opção "Fazendas"
+  bool isVisible = false;
   final controller = Modular.get<HomeController>();
+  int? selectedFarmId;
   final debouncer = Debouncer(milisencods: 200);
   late final ReactionDisposer statusDisposer;
 
@@ -34,6 +36,21 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
     });
   }
 
+  bool _isVisible(int index) {
+    setState(() {
+      if (index == 0) {
+        isVisible = false;
+      }
+      if (index == 1) {
+        isVisible = true;
+      }
+      if (index == 2) {
+        isVisible = false;
+      }
+    });
+    return isVisible;
+  }
+
   @override
   void dispose() {
     statusDisposer();
@@ -43,7 +60,9 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
 
   @override
   void initState() {
-    controller.getAllFarms();
+    controller.getAllFarms().then((_) {
+      controller.getAllGastos();
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       statusDisposer = reaction(
         (_) => controller.homeStatus,
@@ -92,24 +111,22 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
                 child: Column(
                   children: [
                     MenuButton(
-                      icon: Icons.create_outlined,
-                      label: 'Cadastro',
-                      onPressed: () => _onMenuButtonPressed(0),
-                    ),
-                    MenuButton(
                       icon: Icons.work,
                       label: 'Fazendas',
-                      onPressed: () => _onMenuButtonPressed(1),
+                      isSelected: _selectedIndex == 0,
+                      onPressed: () => _onMenuButtonPressed(0),
                     ),
                     MenuButton(
                       icon: Icons.wallet,
                       label: 'Gastos',
-                      onPressed: () => _onMenuButtonPressed(2),
+                      isSelected: _selectedIndex == 1,
+                      onPressed: () => _onMenuButtonPressed(1),
                     ),
                     MenuButton(
                       icon: Icons.water_drop,
                       label: 'Sangrias',
-                      onPressed: () => _onMenuButtonPressed(3),
+                      isSelected: _selectedIndex == 2,
+                      onPressed: () => _onMenuButtonPressed(2),
                     ),
                   ],
                 ),
@@ -120,10 +137,16 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
               child: Column(
                 children: [
                   BarraDeAcao(
+                    index: _selectedIndex,
                     onChanged: (value) {
                       debouncer.call(
                         () {
-                          controller.filterByName(value);
+                          if (_selectedIndex == 0) {
+                            controller.filterFarmByName(value);
+                          }
+                          if (_selectedIndex == 1) {
+                            controller.filterGastoByName(value);
+                          }
                         },
                       );
                     },
@@ -132,7 +155,6 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
                     child: IndexedStack(
                       index: _selectedIndex,
                       children: [
-                        _buildCadastroContent(),
                         Observer(
                           builder: (_) {
                             return Visibility(
@@ -187,12 +209,99 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
   }
 
   // Conteúdo para cada botão do menu
-  Widget _buildCadastroContent() {
-    return const Center(child: Text("Conteúdo de Cadastro"));
-  }
 
   Widget _buildGastosContent() {
-    return const GastoItem();
+    return Column(
+      children: [
+        Observer(
+          builder: (_) {
+            return Visibility(
+              visible: controller.homeStatus == HomeStateStatus.loading
+                  ? false
+                  : true,
+              replacement: const Center(child: CircularProgressIndicator()),
+              child: Stack(
+                alignment: Alignment.centerRight,
+                children: [
+                  DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(),
+                    hint: const Text('Filtrar Por Fazenda'),
+                    value: selectedFarmId,
+                    items: controller.farmList?.map((farm) {
+                      return DropdownMenuItem<int>(
+                        value: farm.id,
+                        child: Text(farm.nome), // Nome da fazenda
+                      );
+                    }).toList(),
+                    onChanged: (int? value) {
+                      setState(() {
+                        selectedFarmId = value;
+                        if (value != null) {
+                          controller.filterByFazenda(value);
+                        } else {
+                          controller
+                              .getAllGastos(); // Restaura a lista completa
+                        }
+                      });
+                    },
+                    validator: (value) => value == null
+                        ? 'Por favor, selecione uma fazenda'
+                        : null,
+                  ),
+                  if (selectedFarmId != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 40.0),
+                      child: IconButton(
+                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        onPressed: () {
+                          setState(() {
+                            selectedFarmId = null;
+                            controller
+                                .getAllGastos(); // Restaura a lista completa
+                          });
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+        Observer(
+          builder: (_) {
+            return Visibility(
+              visible: controller.homeStatus == HomeStateStatus.loading
+                  ? false
+                  : true,
+              replacement: const Center(
+                child: CircularProgressIndicator(),
+              ),
+              child: Expanded(
+                child: Observer(
+                  builder: (_) {
+                    return controller.gastosSearch!.isEmpty
+                        ? const Center(
+                            child: Text('Nenhum gasto encontrado'),
+                          )
+                        : ListView.builder(
+                            itemCount: controller.gastosSearch?.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: GastoItem(
+                                    controller: controller,
+                                    gasto: controller.gastosSearch![index]),
+                              );
+                            },
+                          );
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
   }
 
   Widget _buildSangriasContent() {

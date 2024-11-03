@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 class MenuButton extends StatelessWidget {
   final IconData icon;
   final String label;
+  final bool isSelected;
   final VoidCallback? onPressed;
   const MenuButton(
-      {super.key, required this.icon, required this.label, this.onPressed});
+      {super.key,
+      required this.icon,
+      required this.label,
+      required this.isSelected,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +21,11 @@ class MenuButton extends StatelessWidget {
         height: MediaQuery.of(context).size.height * 0.055,
         child: ElevatedButton(
           onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isSelected
+                ? const Color.fromARGB(255, 134, 133, 133)
+                : Colors.grey[300],
+          ),
           child: Row(
             children: [
               Icon(

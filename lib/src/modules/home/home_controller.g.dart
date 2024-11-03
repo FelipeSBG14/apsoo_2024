@@ -61,6 +61,24 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
+  late final _$_gastosListAtom =
+      Atom(name: 'HomeControllerBase._gastosList', context: context);
+
+  List<GastosModel>? get gastosList {
+    _$_gastosListAtom.reportRead();
+    return super._gastosList;
+  }
+
+  @override
+  List<GastosModel>? get _gastosList => gastosList;
+
+  @override
+  set _gastosList(List<GastosModel>? value) {
+    _$_gastosListAtom.reportWrite(value, super._gastosList, () {
+      super._gastosList = value;
+    });
+  }
+
   late final _$_farmSearchAtom =
       Atom(name: 'HomeControllerBase._farmSearch', context: context);
 
@@ -76,6 +94,24 @@ mixin _$HomeController on HomeControllerBase, Store {
   set _farmSearch(List<FarmModel>? value) {
     _$_farmSearchAtom.reportWrite(value, super._farmSearch, () {
       super._farmSearch = value;
+    });
+  }
+
+  late final _$_gastosSearchAtom =
+      Atom(name: 'HomeControllerBase._gastosSearch', context: context);
+
+  List<GastosModel>? get gastosSearch {
+    _$_gastosSearchAtom.reportRead();
+    return super._gastosSearch;
+  }
+
+  @override
+  List<GastosModel>? get _gastosSearch => gastosSearch;
+
+  @override
+  set _gastosSearch(List<GastosModel>? value) {
+    _$_gastosSearchAtom.reportWrite(value, super._gastosSearch, () {
+      super._gastosSearch = value;
     });
   }
 
@@ -121,6 +157,58 @@ mixin _$HomeController on HomeControllerBase, Store {
   @override
   Future<void> getAllFarms() {
     return _$getAllFarmsAsyncAction.run(() => super.getAllFarms());
+  }
+
+  late final _$getAllGastosAsyncAction =
+      AsyncAction('HomeControllerBase.getAllGastos', context: context);
+
+  @override
+  Future<void> getAllGastos() {
+    return _$getAllGastosAsyncAction.run(() => super.getAllGastos());
+  }
+
+  late final _$deleteGastoAsyncAction =
+      AsyncAction('HomeControllerBase.deleteGasto', context: context);
+
+  @override
+  Future<void> deleteGasto(int id) {
+    return _$deleteGastoAsyncAction.run(() => super.deleteGasto(id));
+  }
+
+  late final _$HomeControllerBaseActionController =
+      ActionController(name: 'HomeControllerBase', context: context);
+
+  @override
+  void filterFarmByName(String name) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.filterFarmByName');
+    try {
+      return super.filterFarmByName(name);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterGastoByName(String name) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.filterGastoByName');
+    try {
+      return super.filterGastoByName(name);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterByFazenda(int farmId) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.filterByFazenda');
+    try {
+      return super.filterByFazenda(farmId);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override
