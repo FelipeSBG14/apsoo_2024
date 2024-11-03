@@ -1,7 +1,8 @@
-import 'dart:io';
 import 'package:excel/excel.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/date_formatter.dart';
 import 'package:trab_apsoo/src/models/farm/farm_model.dart';
 import 'package:trab_apsoo/src/modules/farms/farm_controller.dart';
 
@@ -10,102 +11,132 @@ Future<void> exportToExcel(
   FarmController controller,
   FarmModel farm,
 ) async {
-  // Cria uma instância de Excel
-  var excel = Excel.createExcel();
-  var sheet = excel['Relatório Fazenda'];
+  // Carrega o template .xls da pasta assets
+  final ByteData data =
+      await rootBundle.load('assets/modeloExcel/templateDefinitivo.xlsx');
+  final Uint8List bytes = data.buffer.asUint8List();
 
-  // Informações do cabeçalho
-  sheet.appendRow([
-    TextCellValue('Município:'),
-    TextCellValue('Início: ${farm.startDate} ${farm.municipio}')
-  ]);
-  sheet.appendRow([TextCellValue('A/C:'), TextCellValue('${farm.maquinario}')]);
-  sheet.appendRow([TextCellValue('${farm.ha}HA')]);
-  sheet.appendRow([TextCellValue('Fim: ${farm.finalDate}')]);
-  sheet.appendRow([
-    TextCellValue('NF: ${farm.nfCode}'),
-    TextCellValue('Funcionários:${farm.funcionarios}')
-  ]);
+  // Carrega o arquivo Excel a partir dos bytes
+  var excel = Excel.decodeBytes(bytes);
 
-  sheet.appendRow([TextCellValue('')]); // Linha vazia
-  sheet.appendRow([TextCellValue('SERVIÇO: ${farm.servico}')]);
+  // Seleciona a primeira planilha do template
+  var sheet = excel.sheets[excel.tables.keys.first];
 
-  sheet.appendRow([TextCellValue('')]); // Linha vazia
-  sheet.appendRow([TextCellValue('TOTAL R\$ ${farm.valorTotal}')]); // Total
+  // Preenche as células com os dados da fazenda
+  sheet?.updateCell(
+      CellIndex.indexByString("I2"), TextCellValue(farm.nome.toUpperCase()));
+  sheet?.updateCell(
+      CellIndex.indexByString("B4"), TextCellValue(farm.municipio));
+  sheet?.updateCell(
+      CellIndex.indexByString("B5"), TextCellValue('${farm.ha} HA'));
+  sheet?.updateCell(
+      CellIndex.indexByString("B6"), TextCellValue(farm.maquinario));
+  sheet?.updateCell(
+    CellIndex.indexByString("B7"),
+    TextCellValue(
+      DateFormatter.format(
+        farm.startDate,
+      ),
+    ),
+  );
+  sheet?.updateCell(
+    CellIndex.indexByString("B8"),
+    TextCellValue(
+      DateFormatter.format(
+        farm.startDate,
+      ),
+    ),
+  );
+  sheet?.updateCell(CellIndex.indexByString("B9"), TextCellValue(farm.nfCode!));
+  sheet?.updateCell(
+      CellIndex.indexByString("B10"), TextCellValue(farm.funcionarios!));
+  sheet?.updateCell(
+      CellIndex.indexByString("B11"), TextCellValue(farm.servicoName!));
+  sheet?.updateCell(
+      CellIndex.indexByString("B12"),
+      TextCellValue(
+        'R\$ ${farm.valorTotal}',
+      ));
 
-  sheet.appendRow([TextCellValue('')]); // Linha vazia
-
-  // Seção "FAZENDA SANTA CECÍLIA - GILMAR"
-  sheet.appendRow([
-    TextCellValue('${farm.nome.toUpperCase()}'),
-    TextCellValue(''),
-    TextCellValue(''),
-  ]);
-  sheet.appendRow([
-    TextCellValue('DATA'),
-    TextCellValue('DESCRIÇÃO'),
-    TextCellValue('VALOR'),
-  ]);
+  // Preenche os dados da tabela de gastos
+  int rowIndex =
+      3; // Ajuste para a linha inicial onde começa a tabela de gastos
 
   for (var gasto in controller.gastosByFarm) {
-    sheet.appendRow([
-      TextCellValue(gasto.date.toString()),
-      TextCellValue(gasto.descricao),
-      DoubleCellValue(gasto.value),
-    ]);
+    sheet?.updateCell(
+      CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex),
+      TextCellValue(
+        DateFormatter.format(
+          farm.startDate,
+        ),
+      ),
+    ); // DATA
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex),
+        TextCellValue(gasto.descricao)); // DESCRIÇÃO
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 9, rowIndex: rowIndex),
+        DoubleCellValue(gasto.value)); // VALOR
+    rowIndex++;
   }
 
-  sheet.appendRow([TextCellValue('')]); // Linha vazia
-
-  // Seção "DIESEL"
-  sheet.appendRow([TextCellValue('DIESEL')]);
-  sheet.appendRow([
-    TextCellValue('DATA'),
-    TextCellValue('NF'),
-    TextCellValue('RAZÃO'),
-    TextCellValue('VALOR'),
-    TextCellValue('LITROS')
-  ]);
+  // Tabela de DIESEL
+  rowIndex = 3; // Pula algumas linhas para a próxima seção
 
   for (var diesel in controller.dieselByFarm) {
-    sheet.appendRow([
-      TextCellValue(diesel.date.toString()),
-      TextCellValue(diesel.nfCode),
-      TextCellValue(diesel.razao),
-      DoubleCellValue(diesel.value),
-      IntCellValue(diesel.litros),
-    ]);
+    sheet?.updateCell(
+      CellIndex.indexByColumnRow(columnIndex: 13, rowIndex: rowIndex),
+      TextCellValue(
+        DateFormatter.format(
+          farm.startDate,
+        ),
+      ),
+    );
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 14, rowIndex: rowIndex),
+        TextCellValue(diesel.nfCode)); // assuming NF is integer
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 15, rowIndex: rowIndex),
+        TextCellValue(diesel.razao));
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 16, rowIndex: rowIndex),
+        DoubleCellValue(diesel.value));
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 17, rowIndex: rowIndex),
+        IntCellValue(diesel.litros));
+    rowIndex++;
   }
 
-  sheet.appendRow([TextCellValue('')]); // Linha vazia
-
-  // Seção "SANGRIA"
-  sheet.appendRow([TextCellValue('SANGRIA')]);
-  sheet.appendRow([
-    TextCellValue('DATA'),
-    TextCellValue('LITROS'),
-    TextCellValue('PARA ONDE FOI'),
-    TextCellValue('VALOR'),
-  ]);
+  // Tabela de SANGRIA
+  rowIndex = 33; // Pula algumas linhas para a próxima seção
 
   for (var sangria in controller.sangriaByFarm) {
-    sheet.appendRow([
-      TextCellValue(sangria.date.toString()),
-      IntCellValue(sangria.litros),
-      TextCellValue(sangria.destino),
-      DoubleCellValue(sangria.valor),
-    ]);
+    sheet?.updateCell(
+      CellIndex.indexByColumnRow(columnIndex: 13, rowIndex: rowIndex),
+      TextCellValue(
+        DateFormatter.format(
+          farm.startDate,
+        ),
+      ),
+    );
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 14, rowIndex: rowIndex),
+        IntCellValue(sangria.litros));
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 15, rowIndex: rowIndex),
+        TextCellValue(sangria.destino));
+    sheet?.updateCell(
+        CellIndex.indexByColumnRow(columnIndex: 16, rowIndex: rowIndex),
+        DoubleCellValue(sangria.valor));
+    rowIndex++;
   }
 
-  // Salva o arquivo no diretório de documentos
+  // Salva o arquivo modificado no diretório de documentos
   var directory = await getApplicationDocumentsDirectory();
-  String filePath = "${directory.path}/Fazenda_${farm.nome}.xlsx";
-  var fileBytes = excel.save();
-  File(filePath)
-    ..createSync(recursive: true)
-    ..writeAsBytesSync(fileBytes!);
+  String filePath = "${directory.path}/Fazenda_${farm.nome}.xls";
 
   // Exibe mensagem de sucesso
+  // ignore: use_build_context_synchronously
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
         content: Text('Arquivo Excel exportado com sucesso para $filePath')),

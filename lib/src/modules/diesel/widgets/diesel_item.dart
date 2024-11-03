@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/date_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/core/widgets/modal_exclusao.dart';
 import 'package:trab_apsoo/src/models/gastos/diesel_model.dart';
@@ -72,7 +73,7 @@ class DieselItem extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        diesel.date!.toIso8601String().split('T')[0],
+                        DateFormatter.format(diesel.date!),
                         style: TextStyles.i.textRegular.copyWith(
                           fontWeight: FontWeight.w300,
                           color: Colors.grey,
