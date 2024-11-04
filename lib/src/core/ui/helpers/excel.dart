@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -130,10 +132,14 @@ Future<void> exportToExcel(
         DoubleCellValue(sangria.valor));
     rowIndex++;
   }
-
+  String filePath = "C:\\excel\\Fazenda_${farm.nome}.xls";
   // Salva o arquivo modificado no diretório de documentos
-  var directory = await getApplicationDocumentsDirectory();
-  String filePath = "${directory.path}/Fazenda_${farm.nome}.xls";
+  final directory = Directory("C:\\excel");
+  if (!await directory.exists()) {
+    await directory.create(recursive: true);
+  }
+  final file = File(filePath);
+  await file.writeAsBytes(excel.encode()!);
 
   // Exibe mensagem de sucesso
   // ignore: use_build_context_synchronously

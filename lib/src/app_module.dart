@@ -18,6 +18,5 @@ class AppModule extends Module {
     r.module('/newGasto', module: GastoModule());
     r.module('/newSangria', module: SangriaModule());
     r.module('/newDiesel', module: DieselModule());
-    //r.module('/listPlants/', module: ListPlantsModule());
   }
 }
