@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/currency_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/models/farm/farm_model.dart';
 
@@ -71,7 +72,7 @@ class FarmItem extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'R\$ ${farm.valorTotal}',
+                        formatCurrency(farm.valorTotal),
                         style: context.textStyles.textRegular.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,

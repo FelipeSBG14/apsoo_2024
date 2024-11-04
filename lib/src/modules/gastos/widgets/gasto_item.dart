@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/currency_formatter.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/date_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/core/widgets/modal_exclusao.dart';
 import 'package:trab_apsoo/src/models/gastos/gastos_model.dart';
@@ -72,7 +74,7 @@ class GastoItem extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        gasto.date!.toIso8601String().split('T')[0],
+                        DateFormatter.format(gasto.date!),
                         style: TextStyles.i.textRegular.copyWith(
                           fontWeight: FontWeight.w300,
                           color: Colors.grey,
@@ -82,7 +84,7 @@ class GastoItem extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        'Valor: R\$ ${gasto.value}',
+                        'Valor: ${formatCurrency(gasto.value)}',
                         style: TextStyles.i.textRegular.copyWith(
                           color: const Color.fromARGB(255, 80, 79, 79),
                           fontWeight: FontWeight.bold,

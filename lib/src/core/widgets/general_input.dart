@@ -1,4 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 
 class GeneralInput extends StatelessWidget {
@@ -9,17 +12,19 @@ class GeneralInput extends StatelessWidget {
   final TextInputType? inputType;
   final Widget? prefixIcon;
   final TextEditingController controller;
+  final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   const GeneralInput({
     super.key,
     required this.label,
-    this.lines,
     required this.hint,
-    required this.controller,
+    this.maxLines,
+    this.lines,
     this.inputType,
     this.prefixIcon,
+    required this.controller,
     this.validator,
-    this.maxLines,
+    this.inputFormatters,
   });
 
   @override
@@ -42,6 +47,7 @@ class GeneralInput extends StatelessWidget {
           controller: controller,
           maxLines: lines,
           maxLength: maxLines,
+          inputFormatters: inputFormatters,
           decoration: InputDecoration(
             prefixIcon: prefixIcon,
             hintText: hint,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/debouncer.dart';
@@ -8,11 +7,11 @@ import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
 import 'package:trab_apsoo/src/core/widgets/barra_de_acao.dart';
 import 'package:trab_apsoo/src/core/widgets/menu_button.dart';
-import 'package:trab_apsoo/src/modules/diesel/widgets/diesel_item.dart';
-import 'package:trab_apsoo/src/modules/farms/widgets/farm_item.dart';
-import 'package:trab_apsoo/src/modules/gastos/widgets/gasto_item.dart';
 import 'package:trab_apsoo/src/modules/home/home_controller.dart';
-import 'package:trab_apsoo/src/modules/sangrias/widgets/sangria_item.dart';
+import 'package:trab_apsoo/src/modules/home/widgets/diesel_content.dart';
+import 'package:trab_apsoo/src/modules/home/widgets/farm_content.dart';
+import 'package:trab_apsoo/src/modules/home/widgets/gastos_content.dart';
+import 'package:trab_apsoo/src/modules/home/widgets/sangria_content.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -153,48 +152,54 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
                     child: IndexedStack(
                       index: _selectedIndex,
                       children: [
-                        Observer(
-                          builder: (_) {
-                            return Visibility(
-                              visible: controller.homeStatus ==
-                                      HomeStateStatus.loading
-                                  ? false
-                                  : true,
-                              replacement: const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                              child: Expanded(
-                                child: Observer(
-                                  builder: (_) {
-                                    return controller.farmSearch!.isEmpty
-                                        ? const Center(
-                                            child: Text(
-                                                'Nenhuma fazenda encontrada'),
-                                          )
-                                        : GridView.builder(
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 4,
-                                              mainAxisSpacing: 4.0,
-                                              crossAxisSpacing: 4.0,
-                                            ),
-                                            itemCount:
-                                                controller.farmSearch?.length,
-                                            itemBuilder: (context, index) {
-                                              return FarmItem(
-                                                  farm: controller
-                                                      .farmSearch![index]);
-                                            },
-                                          );
-                                  },
-                                ),
-                              ),
-                            );
+                        FarmContent(
+                          controller: controller,
+                        ),
+                        GastosContent(
+                          controller: controller,
+                          selectedFarmId: selectedFarmId,
+                          onFarmSelected: (int? value) {
+                            setState(() {
+                              selectedFarmId = value;
+                              if (value != null) {
+                                controller.filterGastosByFazenda(value);
+                              } else {
+                                controller
+                                    .getAllGastos(); // Restaura a lista completa
+                              }
+                            });
                           },
                         ),
-                        _buildGastosContent(),
-                        _buildSangriasContent(),
-                        _buildDieselContext(),
+                        SangriaContent(
+                          controller: controller,
+                          selectedFarmId: selectedFarmId,
+                          onFarmSelected: (int? value) {
+                            setState(() {
+                              selectedFarmId = value;
+                              if (value != null) {
+                                controller.filterSangriaByFazenda(value);
+                              } else {
+                                controller
+                                    .getAllSangrias(); // Restaura a lista completa
+                              }
+                            });
+                          },
+                        ),
+                        DieselContent(
+                          controller: controller,
+                          selectedFarmId: selectedFarmId,
+                          onFarmSelected: (int? value) {
+                            setState(() {
+                              selectedFarmId = value;
+                              if (value != null) {
+                                controller.filterDieselByFazenda(value);
+                              } else {
+                                controller
+                                    .getAllDiesel(); // Restaura a lista completa
+                              }
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -204,290 +209,6 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
           ],
         ),
       ),
-    );
-  }
-
-  // Conteúdo para cada botão do menu
-
-  Widget _buildGastosContent() {
-    return Column(
-      children: [
-        Observer(
-          builder: (_) {
-            return Visibility(
-              visible: controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
-              replacement: const Center(child: CircularProgressIndicator()),
-              child: Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  DropdownButtonFormField<int>(
-                    decoration: const InputDecoration(),
-                    hint: const Text('Filtrar Por Fazenda'),
-                    value: selectedFarmId,
-                    items: controller.farmList?.map((farm) {
-                      return DropdownMenuItem<int>(
-                        value: farm.id,
-                        child: Text(farm.nome), // Nome da fazenda
-                      );
-                    }).toList(),
-                    onChanged: (int? value) {
-                      setState(() {
-                        selectedFarmId = value;
-                        if (value != null) {
-                          controller.filterGastosByFazenda(value);
-                        } else {
-                          controller
-                              .getAllGastos(); // Restaura a lista completa
-                        }
-                      });
-                    },
-                    validator: (value) => value == null
-                        ? 'Por favor, selecione uma fazenda'
-                        : null,
-                  ),
-                  if (selectedFarmId != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 40.0),
-                      child: IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
-                        onPressed: () {
-                          setState(() {
-                            selectedFarmId = null;
-                            controller
-                                .getAllGastos(); // Restaura a lista completa
-                          });
-                        },
-                      ),
-                    ),
-                ],
-              ),
-            );
-          },
-        ),
-        Observer(
-          builder: (_) {
-            return Visibility(
-              visible: controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
-              replacement: const Center(
-                child: CircularProgressIndicator(),
-              ),
-              child: Expanded(
-                child: Observer(
-                  builder: (_) {
-                    return controller.gastosSearch!.isEmpty
-                        ? const Center(
-                            child: Text('Nenhum gasto encontrado'),
-                          )
-                        : ListView.builder(
-                            itemCount: controller.gastosSearch?.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: GastoItem(
-                                    controller: controller,
-                                    gasto: controller.gastosSearch![index]),
-                              );
-                            },
-                          );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSangriasContent() {
-    return Column(
-      children: [
-        Observer(
-          builder: (_) {
-            return Visibility(
-              visible: controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
-              replacement: const Center(child: CircularProgressIndicator()),
-              child: Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  DropdownButtonFormField<int>(
-                    decoration: const InputDecoration(),
-                    hint: const Text('Filtrar Por Fazenda'),
-                    value: selectedFarmId,
-                    items: controller.farmList?.map((farm) {
-                      return DropdownMenuItem<int>(
-                        value: farm.id,
-                        child: Text(farm.nome), // Nome da fazenda
-                      );
-                    }).toList(),
-                    onChanged: (int? value) {
-                      setState(() {
-                        selectedFarmId = value;
-                        if (value != null) {
-                          controller.filterSangriaByFazenda(value);
-                        } else {
-                          controller
-                              .getAllSangrias(); // Restaura a lista completa
-                        }
-                      });
-                    },
-                    validator: (value) => value == null
-                        ? 'Por favor, selecione uma fazenda'
-                        : null,
-                  ),
-                  if (selectedFarmId != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 40.0),
-                      child: IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
-                        onPressed: () {
-                          setState(() {
-                            selectedFarmId = null;
-                            controller
-                                .getAllSangrias(); // Restaura a lista completa
-                          });
-                        },
-                      ),
-                    ),
-                ],
-              ),
-            );
-          },
-        ),
-        Observer(
-          builder: (_) {
-            return Visibility(
-              visible: controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
-              replacement: const Center(
-                child: CircularProgressIndicator(),
-              ),
-              child: Expanded(
-                child: Observer(
-                  builder: (_) {
-                    return controller.sangriasSearch!.isEmpty
-                        ? const Center(
-                            child: Text('Nenhuma sangria encontradoa'),
-                          )
-                        : ListView.builder(
-                            itemCount: controller.sangriasSearch?.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SangriaItem(
-                                    controller: controller,
-                                    sangria: controller.sangriasSearch![index]),
-                              );
-                            },
-                          );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDieselContext() {
-    return Column(
-      children: [
-        Observer(
-          builder: (_) {
-            return Visibility(
-              visible: controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
-              replacement: const Center(child: CircularProgressIndicator()),
-              child: Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  DropdownButtonFormField<int>(
-                    decoration: const InputDecoration(),
-                    hint: const Text('Filtrar Por Fazenda'),
-                    value: selectedFarmId,
-                    items: controller.farmList?.map((farm) {
-                      return DropdownMenuItem<int>(
-                        value: farm.id,
-                        child: Text(farm.nome), // Nome da fazenda
-                      );
-                    }).toList(),
-                    onChanged: (int? value) {
-                      setState(() {
-                        selectedFarmId = value;
-                        if (value != null) {
-                          controller.filterDieselByFazenda(value);
-                        } else {
-                          controller
-                              .getAllDiesel(); // Restaura a lista completa
-                        }
-                      });
-                    },
-                    validator: (value) => value == null
-                        ? 'Por favor, selecione uma fazenda'
-                        : null,
-                  ),
-                  if (selectedFarmId != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 40.0),
-                      child: IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
-                        onPressed: () {
-                          setState(() {
-                            selectedFarmId = null;
-                            controller
-                                .getAllDiesel(); // Restaura a lista completa
-                          });
-                        },
-                      ),
-                    ),
-                ],
-              ),
-            );
-          },
-        ),
-        Observer(
-          builder: (_) {
-            return Visibility(
-              visible: controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
-              replacement: const Center(
-                child: CircularProgressIndicator(),
-              ),
-              child: Expanded(
-                child: Observer(
-                  builder: (_) {
-                    return controller.dieselSearch!.isEmpty
-                        ? const Center(
-                            child: Text('Nenhum diesel encontrado'),
-                          )
-                        : ListView.builder(
-                            itemCount: controller.dieselSearch?.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: DieselItem(
-                                    controller: controller,
-                                    diesel: controller.dieselSearch![index]),
-                              );
-                            },
-                          );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-      ],
     );
   }
 }

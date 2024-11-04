@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/currency_formatter.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/date_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/core/widgets/modal_exclusao.dart';
 import 'package:trab_apsoo/src/models/gastos/sangria_model.dart';
@@ -62,7 +64,7 @@ class SangriaItem extends StatelessWidget {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: Text(
-                          sangria.destino,
+                          "Destino: ${sangria.destino}",
                           overflow: TextOverflow.ellipsis,
                           style: TextStyles.i.textTitle.copyWith(
                             fontWeight: FontWeight.bold,
@@ -73,7 +75,7 @@ class SangriaItem extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        sangria.date!.toIso8601String().split('T')[0],
+                        DateFormatter.format(sangria.date!),
                         style: TextStyles.i.textRegular.copyWith(
                           fontWeight: FontWeight.w300,
                           color: Colors.grey,
@@ -83,7 +85,18 @@ class SangriaItem extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        'Valor: R\$ ${sangria.valor}',
+                        'Litros: ${sangria.litros}',
+                        style: TextStyles.i.textRegular.copyWith(
+                          color: const Color.fromARGB(255, 80, 79, 79),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Valor: ${formatCurrency(sangria.valor)}',
                         style: TextStyles.i.textRegular.copyWith(
                           color: const Color.fromARGB(255, 80, 79, 79),
                           fontWeight: FontWeight.bold,

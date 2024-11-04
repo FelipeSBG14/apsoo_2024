@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
@@ -196,6 +197,9 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       label: 'Hectares',
                       hint: 'Insira a área em hectares',
                       controller: haEC,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                     const SizedBox(height: 30),
                     GestureDetector(
@@ -228,6 +232,9 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       label: 'Código NF',
                       hint: 'Insira o Código da Nota Fiscal',
                       controller: nfCodeEC,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                     const SizedBox(height: 30),
                     GeneralInput(
@@ -241,6 +248,9 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       hint: 'Insira o Valor Total',
                       inputType: TextInputType.number,
                       controller: valorTotalEC,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       prefixIcon: const Padding(
                         padding: EdgeInsets.only(top: 10, left: 8),
                         child: Text(

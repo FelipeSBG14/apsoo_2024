@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/splash_screen.dart';
 import 'package:trab_apsoo/src/modules/diesel/diesel_module.dart';
 import 'package:trab_apsoo/src/modules/farms/farm_module.dart';
 import 'package:trab_apsoo/src/modules/gastos/gasto_module.dart';
@@ -13,6 +14,7 @@ class AppModule extends Module {
       ];
   @override
   void routes(RouteManager r) {
+    r.child('/', child: (context) => const SplashScreen());
     r.module('/', module: HomeModule());
     r.module('/newFarm', module: FarmModule());
     r.module('/newGasto', module: GastoModule());

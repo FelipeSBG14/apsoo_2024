@@ -42,28 +42,28 @@ abstract class HomeControllerBase with Store {
   bool isLoading = false;
 
   @readonly
-  List<FarmModel>? _farmList;
+  List<FarmModel>? _farmList = [];
 
   @readonly
-  List<GastosModel>? _gastosList;
+  List<GastosModel>? _gastosList = [];
 
   @readonly
-  List<SangriaModel>? _sangriasList;
+  List<SangriaModel>? _sangriasList = [];
 
   @readonly
-  List<DieselModel>? _dieselList;
+  List<DieselModel>? _dieselList = [];
 
   @readonly
-  List<FarmModel>? _farmSearch;
+  List<FarmModel>? _farmSearch = [];
 
   @readonly
-  List<GastosModel>? _gastosSearch;
+  List<GastosModel>? _gastosSearch = [];
 
   @readonly
-  List<SangriaModel>? _sangriasSearch;
+  List<SangriaModel>? _sangriasSearch = [];
 
   @readonly
-  List<DieselModel>? _dieselSearch;
+  List<DieselModel>? _dieselSearch = [];
 
   @readonly
   String? _filterName;

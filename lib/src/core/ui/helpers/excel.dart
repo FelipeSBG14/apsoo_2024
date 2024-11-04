@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/currency_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/date_formatter.dart';
 import 'package:trab_apsoo/src/models/farm/farm_model.dart';
 import 'package:trab_apsoo/src/modules/farms/farm_controller.dart';
@@ -56,7 +57,7 @@ Future<void> exportToExcel(
   sheet?.updateCell(
       CellIndex.indexByString("B12"),
       TextCellValue(
-        'R\$ ${farm.valorTotal}',
+        formatCurrency(farm.valorTotal),
       ));
 
   // Preenche os dados da tabela de gastos
