@@ -3,10 +3,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/currency_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/style/text_styles.dart';
 import 'package:trab_apsoo/src/models/farm/farm_model.dart';
+import 'package:trab_apsoo/src/modules/home/home_controller.dart';
 
 class FarmItem extends StatelessWidget {
   final FarmModel farm;
-  const FarmItem({super.key, required this.farm});
+  FarmItem({super.key, required this.farm});
+
+  final controller = Modular.get<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,9 @@ class FarmItem extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Modular.to.pushNamed('/newFarm/farmPage', arguments: farm);
+        },
+        onLongPress: () {
+          _showOptionsModal(context);
         },
         splashColor: Colors.blueAccent.withOpacity(1),
         highlightColor: Colors.blueAccent.withOpacity(1),
@@ -86,6 +92,83 @@ class FarmItem extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showOptionsModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Editar'),
+              onTap: () {
+                Navigator.of(context).pop(); // Fecha o modal
+                Modular.to.pushNamed('/newFarm/', arguments: farm);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_forever_outlined),
+              title: const Text('Excluir'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _showDeleteConfirmationDialog(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.cancel),
+              title: const Text('Cancelar'),
+              onTap: () {
+                Navigator.of(context).pop(); // Fecha o modal
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Confirmar Exclusão',
+            style: TextStyles.i.textRegular.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'Tem certeza de que deseja excluir esta fazenda? Essa ação não pode ser desfeita e excluirá também os gastos, sangrias e diesel dessa fazenda !',
+            style: TextStyles.i.textRegular,
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Excluir',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                await controller.deleteFarm(farm.id!);
+                Navigator.of(context).pop(); // Fecha o diálogo de confirmação
+                // Ação de exclusão da fazenda aqui
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

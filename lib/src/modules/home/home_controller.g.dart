@@ -223,6 +223,14 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
+  late final _$deleteFarmAsyncAction =
+      AsyncAction('HomeControllerBase.deleteFarm', context: context);
+
+  @override
+  Future<void> deleteFarm(int id) {
+    return _$deleteFarmAsyncAction.run(() => super.deleteFarm(id));
+  }
+
   late final _$getAllFarmsAsyncAction =
       AsyncAction('HomeControllerBase.getAllFarms', context: context);
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/decimal_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
@@ -22,6 +23,8 @@ class FarmAddPage extends StatefulWidget {
 class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
   final controller = Modular.get<FarmController>();
   final homeController = Modular.get<HomeController>();
+  int? farmId;
+  bool isEditing = false;
   late final ReactionDisposer statusDisposer;
   final formKey = GlobalKey<FormState>();
   final enabledEC = TextEditingController();
@@ -55,29 +58,51 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
 
   @override
   void initState() {
+    final FarmModel? farms = Modular.args.data;
+
+    if (farms != null) {
+      isEditing = true;
+      farmId = farms.id;
+      nomeEC.text = farms.nome;
+      municipioEC.text = farms.municipio;
+      maquinarioEC.text = farms.maquinario;
+      haEC.text = farms.ha!;
+      startDateEC.text = farms.startDate!.toIso8601String().split('T')[0];
+      finalDateEC.text = farms.finalDate!.toIso8601String().split('T')[0];
+      nfCodeEC.text = farms.nfCode!;
+      servicoNameEC.text = farms.servicoName!;
+      valorTotalEC.text = farms.valorTotal.toString();
+      funcionariosEC.text = farms.funcionarios!;
+    }
+
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        statusDisposer = reaction((_) => controller.status, (status) async {
-          switch (status) {
-            case FarmStateStatus.inital:
-              break;
-            case FarmStateStatus.loading:
-              showLoader();
-              break;
-            case FarmStateStatus.loaded:
-              hideLoader();
-              break;
-            case FarmStateStatus.error:
-              showError('Erro ao buscar fazenda');
-              hideLoader();
-              break;
-            case FarmStateStatus.addOrUpdateFarm:
-              showSuccess('SUCESSO');
-              homeController.getAllFarms();
-              hideLoader();
-              break;
-          }
-        });
+        statusDisposer = reaction(
+          (_) => controller.status,
+          (status) async {
+            switch (status) {
+              case FarmStateStatus.inital:
+                break;
+              case FarmStateStatus.loading:
+                showLoader();
+                break;
+              case FarmStateStatus.loaded:
+                hideLoader();
+                break;
+              case FarmStateStatus.error:
+                showError('Erro ao buscar fazenda');
+                hideLoader();
+                break;
+              case FarmStateStatus.addOrUpdateFarm:
+                isEditing
+                    ? showSuccess('Fazenda editada com sucesso !')
+                    : showSuccess('Fazenda adicionada com sucesso !');
+                homeController.getAllFarms();
+                hideLoader();
+                break;
+            }
+          },
+        );
         //controller.loadFarms();
       },
     );
@@ -102,6 +127,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
 
       // Cria o modelo FarmModel com os dados do formulário
       final farm = FarmModel(
+        id: farmId,
         nome: nomeEC.text,
         enabled: true,
         municipio: municipioEC.text,
@@ -140,7 +166,9 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Fazenda'),
+        title: isEditing
+            ? const Text('Editar Fazenda')
+            : const Text('Adicionar Fazenda'),
       ),
       body: Center(
         child: Container(
@@ -248,9 +276,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                       hint: 'Insira o Valor Total',
                       inputType: TextInputType.number,
                       controller: valorTotalEC,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
+                      inputFormatters: [decimalInputFormatter()],
                       prefixIcon: const Padding(
                         padding: EdgeInsets.only(top: 10, left: 8),
                         child: Text(

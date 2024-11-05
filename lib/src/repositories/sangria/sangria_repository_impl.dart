@@ -44,6 +44,40 @@ class SangriaRepositoryImpl implements SangriaRepository {
   }
 
   @override
+  Future<void> deleteAllSangriaByFarmId(int farmId) async {
+    try {
+      // Obtém todos os registros de sangria para o farmId especificado
+      final sangriaList = await getSangriaByFarmId(farmId);
+
+      // Verifica se existem registros para deletar
+      if (sangriaList.isEmpty) {
+        log('Nenhuma sangria encontrada para a fazenda com ID $farmId');
+        return;
+      }
+
+      // Itera sobre a lista e deleta cada item individualmente
+      for (var sangria in sangriaList) {
+        await sangriaDelete(sangria.id);
+      }
+      log('Todos os registros de sangria para a fazenda $farmId foram deletados com sucesso.');
+    } on DioException catch (e, s) {
+      log('Erro ao deletar todos os registros de sangria por farmId',
+          error: e, stackTrace: s);
+      throw RepositoryException(
+        message:
+            'Erro ao deletar todos os registros de sangria por farmId: ${e.message}',
+      );
+    } catch (e, s) {
+      log('Erro desconhecido ao deletar registros de sangria',
+          error: e, stackTrace: s);
+      throw RepositoryException(
+        message:
+            'Erro ao deletar registros de sangria para a fazenda com ID $farmId',
+      );
+    }
+  }
+
+  @override
   Future<List<SangriaModel>> getSangrias(String? destino) async {
     try {
       List<SangriaModel> sangriaList = [];

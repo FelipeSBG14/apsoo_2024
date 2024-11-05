@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/decimal_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
@@ -23,6 +25,7 @@ class _DieselAddPageState extends State<DieselAddPage> with Loader, Messages {
   final controller = Modular.get<DieselController>();
   final homeController = Modular.get<HomeController>();
 
+  bool isEditing = false;
   int? selectedFarmId;
   late final ReactionDisposer statusDisposer;
   int? dieselId;
@@ -49,6 +52,7 @@ class _DieselAddPageState extends State<DieselAddPage> with Loader, Messages {
 
     // ignore: unnecessary_null_comparison
     if (diesel != null) {
+      isEditing = true;
       dieselId = diesel.id;
       selectedFarmId = diesel.farmId;
       razaoEC.text = diesel.razao;
@@ -71,11 +75,13 @@ class _DieselAddPageState extends State<DieselAddPage> with Loader, Messages {
               hideLoader();
               break;
             case DieselStateStatus.error:
-              showError('Erro ao buscar fazenda');
+              showError('Erro ao buscar diesel');
               hideLoader();
               break;
             case DieselStateStatus.addOrUpdateDiesel:
-              showSuccess('SUCESSO');
+              isEditing
+                  ? showSuccess('Diesel editado com sucesso')
+                  : showSuccess('Diesel adicionado com sucesso');
               homeController.getAllDiesel();
               hideLoader();
               Navigator.of(context, rootNavigator: true).pop();
@@ -127,7 +133,9 @@ class _DieselAddPageState extends State<DieselAddPage> with Loader, Messages {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Diesel'),
+        title: isEditing
+            ? const Text('Editar Diesel')
+            : const Text('Adicionar Diesel'),
       ),
       body: Center(
         child: Container(
@@ -219,6 +227,7 @@ class _DieselAddPageState extends State<DieselAddPage> with Loader, Messages {
                           child: GeneralInput(
                             label: 'Valor',
                             hint: 'Insira o Valor do Diesel',
+                            inputFormatters: [decimalInputFormatter()],
                             inputType: TextInputType.number,
                             validator:
                                 Validatorless.required('Campo Obrigatório'),
@@ -240,6 +249,7 @@ class _DieselAddPageState extends State<DieselAddPage> with Loader, Messages {
                       label: 'Código da Nota Fiscal',
                       hint: 'Insira o código da nota fiscal de compra',
                       inputType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: Validatorless.required('Campo Obrigatório'),
                       controller: nfCodeEC,
                     ),
@@ -260,6 +270,9 @@ class _DieselAddPageState extends State<DieselAddPage> with Loader, Messages {
                       child: GeneralInput(
                         label: 'Litros de Diesel',
                         hint: 'Insira os litros de Diesel',
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         inputType: TextInputType.number,
                         validator: Validatorless.required('Campo Obrigatório'),
                         controller: litrosEC,

@@ -18,6 +18,7 @@ enum HomeStateStatus {
   uploaded,
   loaded,
   addOrEdit,
+  farmDeleted,
   error;
 }
 
@@ -70,6 +71,26 @@ abstract class HomeControllerBase with Store {
 
   @readonly
   String? _errorMessage;
+
+  @action
+  Future<void> deleteFarm(int id) async {
+    try {
+      _homeStatus = HomeStateStatus.loading;
+      await Future.delayed(Duration.zero);
+      await _farmRepository.farmDelete(id);
+      await _gastosRepository.deleteAllGastosByFarmId(id);
+      await _dieselRepository.deleteAllDieselByFarmId(id);
+      await _sangriaRepository.deleteAllSangriaByFarmId(id);
+      await getAllFarms();
+      await getAllDiesel();
+      await getAllGastos();
+      await getAllSangrias();
+      _homeStatus = HomeStateStatus.farmDeleted;
+    } catch (e, s) {
+      log('Erro ao excluir fazendas', error: e, stackTrace: s);
+      _homeStatus = HomeStateStatus.error;
+    }
+  }
 
   @action
   Future<void> getAllFarms() async {

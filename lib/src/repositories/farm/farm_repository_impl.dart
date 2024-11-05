@@ -37,16 +37,13 @@ class FarmRepositoryImpl implements FarmRepository {
   @override
   Future<void> farmDelete(id) async {
     try {
-      await _dio.put(
+      await _dio.delete(
         '/farm/$id',
-        data: {
-          'enabled': false,
-        },
       );
     } on DioException catch (e, s) {
-      log('Erro ao inativar fazenda', error: e, stackTrace: s);
+      log('Erro ao excluir fazenda', error: e, stackTrace: s);
       throw RepositoryException(
-          message: 'Erro ao inativar a fazenda: ${e.message}');
+          message: 'Erro ao excluir a fazenda: ${e.message}');
     }
   }
 

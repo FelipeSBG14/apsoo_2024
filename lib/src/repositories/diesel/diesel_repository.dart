@@ -5,4 +5,5 @@ abstract interface class DieselRepository {
   Future<void> addOrEditDiesel(DieselModel gasto);
   Future<void> dieselDelete(id);
   Future<List<DieselModel>> getDieselByFarmId(int? farmId);
+  Future<void> deleteAllDieselByFarmId(int farmId);
 }

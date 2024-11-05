@@ -72,6 +72,10 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
             case HomeStateStatus.error:
               showError('Erro ao buscar fazendas');
               hideLoader();
+            case HomeStateStatus.farmDeleted:
+              showSuccess('Sucesso ao excluir fazenda');
+              hideLoader();
+              break;
           }
         },
       );

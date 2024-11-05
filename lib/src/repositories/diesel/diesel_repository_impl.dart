@@ -32,6 +32,40 @@ class DieselRepositoryImpl implements DieselRepository {
   }
 
   @override
+  Future<void> deleteAllDieselByFarmId(int farmId) async {
+    try {
+      // Busca todos os registros de diesel relacionados à fazenda pelo farmId
+      final dieselList = await getDieselByFarmId(farmId);
+
+      // Verifica se há registros para deletar
+      if (dieselList.isEmpty) {
+        log('Nenhum diesel encontrado para a fazenda com ID $farmId');
+        return;
+      }
+
+      // Itera sobre a lista e deleta cada item individualmente
+      for (var diesel in dieselList) {
+        await dieselDelete(diesel.id);
+      }
+      log('Todos os registros de diesel para a fazenda $farmId foram deletados com sucesso.');
+    } on DioException catch (e, s) {
+      log('Erro ao deletar todos os registros de diesel por farmId',
+          error: e, stackTrace: s);
+      throw RepositoryException(
+        message:
+            'Erro ao deletar todos os registros de diesel por farmId: ${e.message}',
+      );
+    } catch (e, s) {
+      log('Erro desconhecido ao deletar registros de diesel',
+          error: e, stackTrace: s);
+      throw RepositoryException(
+        message:
+            'Erro ao deletar registros de diesel para a fazenda com ID $farmId',
+      );
+    }
+  }
+
+  @override
   Future<void> dieselDelete(id) async {
     try {
       await _dio.delete(

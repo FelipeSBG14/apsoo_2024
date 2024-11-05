@@ -5,4 +5,5 @@ abstract interface class SangriaRepository {
   Future<void> addOrEditSangrias(SangriaModel gasto);
   Future<void> sangriaDelete(id);
   Future<List<SangriaModel>> getSangriaByFarmId(int? farmId);
+  Future<void> deleteAllSangriaByFarmId(int farmId);
 }

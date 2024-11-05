@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/decimal_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
@@ -30,6 +31,7 @@ class _GastoAddPageState extends State<GastoAddPage> with Loader, Messages {
   final descricaoEC = TextEditingController();
   final dataEC = TextEditingController();
   final valorEC = TextEditingController();
+  bool isEditing = false;
 
   @override
   void dispose() {
@@ -46,6 +48,7 @@ class _GastoAddPageState extends State<GastoAddPage> with Loader, Messages {
     final GastosModel? gastos = Modular.args.data;
 
     if (gastos != null) {
+      isEditing = true;
       gastoId = gastos.id;
       selectedFarmId = gastos.farmId;
       descricaoEC.text = gastos.descricao;
@@ -66,11 +69,13 @@ class _GastoAddPageState extends State<GastoAddPage> with Loader, Messages {
               hideLoader();
               break;
             case GastoStateStatus.error:
-              showError('Erro ao buscar fazenda');
+              showError('Erro ao buscar gasto');
               hideLoader();
               break;
             case GastoStateStatus.addOrUpdateGasto:
-              showSuccess('SUCESSO');
+              isEditing
+                  ? showSuccess('Gasto editado com sucesso !')
+                  : showSuccess('Gasto adicionado com sucesso !');
               homeController.getAllGastos();
               hideLoader();
               Navigator.of(context, rootNavigator: true).pop();
@@ -121,7 +126,9 @@ class _GastoAddPageState extends State<GastoAddPage> with Loader, Messages {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Gastos'),
+        title: isEditing
+            ? const Text('Editar Gasto')
+            : const Text('Adicionar Gastos'),
       ),
       body: Center(
         child: Container(
@@ -214,6 +221,9 @@ class _GastoAddPageState extends State<GastoAddPage> with Loader, Messages {
                             label: 'Valor',
                             hint: 'Insira o Valor do Gasto',
                             inputType: TextInputType.number,
+                            inputFormatters: [
+                              decimalInputFormatter(),
+                            ],
                             validator:
                                 Validatorless.required('Campo Obrigatório'),
                             controller: valorEC,

@@ -44,6 +44,40 @@ class GastoRepositoryImpl implements GastoRepository {
   }
 
   @override
+  Future<void> deleteAllGastosByFarmId(int farmId) async {
+    try {
+      // Obtém todos os registros de gastos para o farmId especificado
+      final gastosList = await getGastosByFarmId(farmId);
+
+      // Verifica se existem registros para deletar
+      if (gastosList.isEmpty) {
+        log('Nenhum gasto encontrado para a fazenda com ID $farmId');
+        return;
+      }
+
+      // Itera sobre a lista e deleta cada item individualmente
+      for (var gasto in gastosList) {
+        await gastoDelete(gasto.id);
+      }
+      log('Todos os registros de gastos para a fazenda $farmId foram deletados com sucesso.');
+    } on DioException catch (e, s) {
+      log('Erro ao deletar todos os registros de gastos por farmId',
+          error: e, stackTrace: s);
+      throw RepositoryException(
+        message:
+            'Erro ao deletar todos os registros de gastos por farmId: ${e.message}',
+      );
+    } catch (e, s) {
+      log('Erro desconhecido ao deletar registros de gastos',
+          error: e, stackTrace: s);
+      throw RepositoryException(
+        message:
+            'Erro ao deletar registros de gastos para a fazenda com ID $farmId',
+      );
+    }
+  }
+
+  @override
   Future<List<GastosModel>> getGastos(String? descricao) async {
     try {
       List<GastosModel> gastosList = [];

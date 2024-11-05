@@ -14,6 +14,7 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Modular.setInitialRoute('/');
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'WA GESTÃO',
       theme: ThemeConfig.theme,
       routeInformationParser: Modular.routeInformationParser,

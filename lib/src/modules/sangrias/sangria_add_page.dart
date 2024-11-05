@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:trab_apsoo/src/core/ui/helpers/decimal_formatter.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/loaders.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/messages.dart';
 import 'package:trab_apsoo/src/core/ui/helpers/size_extensions.dart';
@@ -26,6 +28,7 @@ class _SangriaAddPageState extends State<SangriaAddPage> with Loader, Messages {
   int? selectedFarmId;
   late final ReactionDisposer statusDisposer;
   int? sangriaId;
+  bool isEditing = false;
   final formKey = GlobalKey<FormState>();
   final destinoEC = TextEditingController();
   final dataEC = TextEditingController();
@@ -48,6 +51,7 @@ class _SangriaAddPageState extends State<SangriaAddPage> with Loader, Messages {
 
     // ignore: unnecessary_null_comparison
     if (sangrias != null) {
+      isEditing = true;
       sangriaId = sangrias.id;
       selectedFarmId = sangrias.farmId;
       destinoEC.text = sangrias.destino;
@@ -70,11 +74,13 @@ class _SangriaAddPageState extends State<SangriaAddPage> with Loader, Messages {
               hideLoader();
               break;
             case SangriaStateStatus.error:
-              showError('Erro ao buscar fazenda');
+              showError('Erro ao buscar sangria');
               hideLoader();
               break;
             case SangriaStateStatus.addOrUpdateSangria:
-              showSuccess('SUCESSO');
+              isEditing
+                  ? showSuccess('Sangria editada com sucesso !')
+                  : showSuccess('Sangria adicionada com sucesso !');
               homeController.getAllSangrias();
               hideLoader();
               Navigator.of(context, rootNavigator: true).pop();
@@ -100,7 +106,7 @@ class _SangriaAddPageState extends State<SangriaAddPage> with Loader, Messages {
         destino: destinoEC.text,
         date: date,
         valor: double.tryParse(valorEC.text) ?? 0.0,
-        litros: int.tryParse(valorEC.text) ?? 0,
+        litros: int.tryParse(litrosEC.text) ?? 0,
         // Adicione outras propriedades conforme necessário
       );
 
@@ -126,7 +132,9 @@ class _SangriaAddPageState extends State<SangriaAddPage> with Loader, Messages {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Sangrias'),
+        title: isEditing
+            ? const Text('Editar Sangria')
+            : const Text('Adicionar Sangrias'),
       ),
       body: Center(
         child: Container(
@@ -219,9 +227,10 @@ class _SangriaAddPageState extends State<SangriaAddPage> with Loader, Messages {
                             label: 'Valor',
                             hint: 'Insira o Valor da Sangria',
                             inputType: TextInputType.number,
+                            inputFormatters: [decimalInputFormatter()],
                             validator:
                                 Validatorless.required('Campo Obrigatório'),
-                            controller: litrosEC,
+                            controller: valorEC,
                             prefixIcon: const Padding(
                               padding: EdgeInsets.only(top: 10, left: 8),
                               child: Text(
@@ -249,9 +258,12 @@ class _SangriaAddPageState extends State<SangriaAddPage> with Loader, Messages {
                       child: GeneralInput(
                         label: 'Litros de Sangria',
                         hint: 'Insira os litros economizados',
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         inputType: TextInputType.number,
                         validator: Validatorless.required('Campo Obrigatório'),
-                        controller: valorEC,
+                        controller: litrosEC,
                       ),
                     ),
                     const SizedBox(height: 30),

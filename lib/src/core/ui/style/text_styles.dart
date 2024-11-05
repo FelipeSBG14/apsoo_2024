@@ -13,7 +13,7 @@ class TextStyles {
   String get fontFamily => 'retrogaming';
 
   TextStyle get textRegular => GoogleFonts.roboto(
-        fontSize: 16,
+        fontSize: 20,
         fontStyle: FontStyle.normal,
         fontWeight: FontWeight.w400,
       );

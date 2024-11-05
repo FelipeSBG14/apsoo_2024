@@ -5,4 +5,5 @@ abstract interface class GastoRepository {
   Future<void> addOrEditGastos(GastosModel gasto);
   Future<void> gastoDelete(id);
   Future<List<GastosModel>> getGastosByFarmId(int? farmId);
+  Future<void> deleteAllGastosByFarmId(int farmId);
 }
