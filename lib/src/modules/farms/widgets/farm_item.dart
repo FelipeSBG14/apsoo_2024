@@ -13,46 +13,40 @@ class FarmItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: InkWell(
-        onTap: () {
-          Modular.to.pushNamed('/newFarm/farmPage', arguments: farm);
-        },
-        onLongPress: () {
-          _showOptionsModal(context);
-        },
-        splashColor: Colors.blueAccent.withOpacity(1),
-        highlightColor: Colors.blueAccent.withOpacity(1),
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(
-                10,
-              ),
-            ),
-            border: Border.all(
-              color: Colors.grey,
-            ),
-          ),
-          height: MediaQuery.of(context).size.height * 0.35,
-          width: MediaQuery.of(context).size.width * 0.13,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  width: MediaQuery.of(context).size.width * 0.12,
-                  color: Colors.blueGrey,
-                  child: Image.asset(
-                    'assets/images/fazenda.jpg',
-                    fit: BoxFit.fitHeight,
-                  ),
+    return InkWell(
+      onTap: () {
+        Modular.to.pushNamed('/newFarm/farmPage', arguments: farm);
+      },
+      onLongPress: () {
+        _showOptionsModal(context);
+      },
+      splashColor: Colors.blueAccent.withOpacity(1),
+      highlightColor: Colors.blueAccent.withOpacity(1),
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.all(color: Colors.grey),
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            // Imagem da fazenda
+            AspectRatio(
+              aspectRatio: 16 / 10, // Mantém uma proporção mais estável
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/images/fazenda.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-              Padding(
+            ),
+            const SizedBox(height: 8),
+            // Nome e informações da fazenda
+            Flexible(
+              child: Padding(
                 padding: const EdgeInsets.only(left: 10.0, top: 8),
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -67,9 +61,7 @@ class FarmItem extends StatelessWidget {
                           fontSize: 13,
                         ),
                       ),
-                      const SizedBox(
-                        height: 12,
-                      ),
+                      const SizedBox(height: 12),
                       Text(
                         'Valor do Serviço',
                         style: context.textStyles.textRegular.copyWith(
@@ -88,8 +80,8 @@ class FarmItem extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -162,6 +154,7 @@ class FarmItem extends StatelessWidget {
               ),
               onPressed: () async {
                 await controller.deleteFarm(farm.id!);
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop(); // Fecha o diálogo de confirmação
                 // Ação de exclusão da fazenda aqui
               },
