@@ -21,6 +21,12 @@ class ThemeConfig {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: AppStyles.i.primaryButton,
     ),
+    textTheme: TextTheme(
+      bodyLarge: TextStyles.i.textRegular.copyWith(
+        color: Colors.black, // Cor mais forte para o texto digitado
+        fontSize: 18, // Tamanho de fonte maior para o texto digitado
+      ),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       fillColor: Colors.transparent,
       filled: true,
@@ -28,6 +34,7 @@ class ThemeConfig {
       contentPadding: const EdgeInsets.all(20),
       labelStyle: TextStyles.i.textRegular.copyWith(color: Colors.grey),
       errorStyle: TextStyles.i.textRegular.copyWith(color: Colors.redAccent),
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
     ),
   );
 }
