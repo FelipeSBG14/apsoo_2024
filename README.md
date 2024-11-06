@@ -1,16 +1,23 @@
-# trab_apsoo
+# WA GESTÃO DESKTOP
 
-A new Flutter project.
+Esse é um projeto que foi feito para uma empresa real durante a disciplina de Análise e Projeto de Software Orientado a Objetos na UFMS, ministrada pelo professor Rodrigo Funabashi. O sistema surgiu da dor da empresa, que presta serviços de limpeza de pasto, de realizar toda a administração de gastos, diesel e sangrias realizadas durante o serviço em uma fazenda. Bem como, anotar as informações dessa propriedade.
 
-## Getting Started
+## Autores
 
-This project is a starting point for a Flutter application.
+- [Felipe Sanches Borges Gomes (Desenvolvedor)](https://www.github.com/FelipeSBG14)
+- Theo Nasser (Analista de Requisitos)
+- Leonardo Perin (Designer)
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- CRUD de Fazendas
+- CRUD de Diesel por fazenda
+- CRUD de Gastos por fazenda
+- CRUD de Sangrias por fazenda
+- Exportação de Planilha Excel no modelo que a empresa passou
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tech Stack
+
+**Framework:** Flutter
+
+**Principais Dependencias Usadas:** Json Rest Server, Flutter Modular e MobX
