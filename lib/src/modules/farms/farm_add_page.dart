@@ -97,6 +97,7 @@ class _FarmAddPageState extends State<FarmAddPage> with Loader, Messages {
                 isEditing
                     ? showSuccess('Fazenda editada com sucesso !')
                     : showSuccess('Fazenda adicionada com sucesso !');
+                Navigator.of(context, rootNavigator: true).pop();
                 homeController.getAllFarms();
                 hideLoader();
                 break;
