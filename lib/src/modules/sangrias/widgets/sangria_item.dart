@@ -62,7 +62,7 @@ class SangriaItem extends StatelessWidget {
                         height: 30,
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.7,
                         child: Text(
                           "Destino: ${sangria.destino}",
                           overflow: TextOverflow.ellipsis,
@@ -110,31 +110,28 @@ class SangriaItem extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        _showDeleteConfirmation(context);
-                      },
-                      icon: const Icon(
-                        Icons.delete_forever_outlined,
-                      ),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _showDeleteConfirmation(context);
+                    },
+                    icon: const Icon(
+                      Icons.delete_forever_outlined,
                     ),
-                    IconButton(
-                      onPressed: () {
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          Modular.to
-                              .pushNamed('/newSangria/', arguments: sangria);
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.edit_outlined,
-                      ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        Modular.to
+                            .pushNamed('/newSangria/', arguments: sangria);
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.edit_outlined,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             )
           ],

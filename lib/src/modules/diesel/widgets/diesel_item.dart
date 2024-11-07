@@ -43,25 +43,27 @@ class DieselItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 32.0, right: 15),
-                    child: Icon(
-                      Icons.shopping_cart_outlined,
-                    ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  width: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 30.0, right: 10),
+                  child: Icon(
+                    Icons.shopping_cart_outlined,
                   ),
-                  Column(
+                ),
+                SingleChildScrollView(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
                         height: 30,
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         child: Text(
                           diesel.razao,
                           overflow: TextOverflow.ellipsis,
@@ -113,37 +115,33 @@ class DieselItem extends StatelessWidget {
                         ),
                       ),
                     ],
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
             Align(
               alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        _showDeleteConfirmation(context);
-                      },
-                      icon: const Icon(
-                        Icons.delete_forever_outlined,
-                      ),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _showDeleteConfirmation(context);
+                    },
+                    icon: const Icon(
+                      Icons.delete_forever_outlined,
                     ),
-                    IconButton(
-                      onPressed: () {
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          Modular.to
-                              .pushNamed('/newDiesel/', arguments: diesel);
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.edit_outlined,
-                      ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        Modular.to.pushNamed('/newDiesel/', arguments: diesel);
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.edit_outlined,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             )
           ],

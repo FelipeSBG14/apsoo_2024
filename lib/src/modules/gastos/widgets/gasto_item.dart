@@ -43,58 +43,58 @@ class GastoItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 32.0, right: 15),
-                    child: Icon(
-                      Icons.shopping_cart_outlined,
-                    ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  width: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 32.0, right: 10),
+                  child: Icon(
+                    Icons.shopping_cart_outlined,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        child: Text(
-                          gasto.descricao,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyles.i.textTitle.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        DateFormatter.format(gasto.date!),
-                        style: TextStyles.i.textRegular.copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Valor: ${formatCurrency(gasto.value)}',
-                        style: TextStyles.i.textRegular.copyWith(
-                          color: const Color.fromARGB(255, 80, 79, 79),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Text(
+                        gasto.descricao,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyles.i.textTitle.copyWith(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
                         ),
                       ),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      DateFormatter.format(gasto.date!),
+                      style: TextStyles.i.textRegular.copyWith(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Valor: ${formatCurrency(gasto.value)}',
+                      style: TextStyles.i.textRegular.copyWith(
+                        color: const Color.fromARGB(255, 80, 79, 79),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
             Align(
               alignment: Alignment.bottomRight,
