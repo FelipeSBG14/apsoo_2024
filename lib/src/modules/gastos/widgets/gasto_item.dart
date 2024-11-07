@@ -61,7 +61,7 @@ class GastoItem extends StatelessWidget {
                         height: 30,
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
+                        width: MediaQuery.of(context).size.width * 0.3,
                         child: Text(
                           gasto.descricao,
                           overflow: TextOverflow.ellipsis,

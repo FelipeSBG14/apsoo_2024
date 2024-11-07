@@ -36,15 +36,15 @@ class FarmItem extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-          height: MediaQuery.of(context).size.height * 0.35,
-          width: MediaQuery.of(context).size.width * 0.13,
+          height: MediaQuery.of(context).size.height * 0.50,
+          width: MediaQuery.of(context).size.width * 0.17,
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.25,
-                  width: MediaQuery.of(context).size.width * 0.12,
+                  width: MediaQuery.of(context).size.width * 0.155,
                   color: Colors.blueGrey,
                   child: Image.asset(
                     'assets/images/fazenda.jpg',

@@ -34,8 +34,8 @@ class DieselItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.25,
-        width: MediaQuery.of(context).size.width * 0.79,
+        height: MediaQuery.of(context).size.height * 0.30,
+        width: MediaQuery.of(context).size.width * 0.03,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(10),
@@ -61,7 +61,7 @@ class DieselItem extends StatelessWidget {
                         height: 30,
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
+                        width: MediaQuery.of(context).size.width * 0.3,
                         child: Text(
                           diesel.razao,
                           overflow: TextOverflow.ellipsis,

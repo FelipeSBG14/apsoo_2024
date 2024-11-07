@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "trab_apsoo" "\0"
+            VALUE "FileDescription", "wa_gestao" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "trab_apsoo" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "trab_apsoo.exe" "\0"
-            VALUE "ProductName", "trab_apsoo" "\0"
+            VALUE "OriginalFilename", "wa_gestao.exe" "\0"
+            VALUE "ProductName", "wa_gestao" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
