@@ -50,7 +50,7 @@ class DieselItem extends StatelessWidget {
                   width: 20,
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(top: 30.0, right: 10),
+                  padding: EdgeInsets.only(top: 8.0, right: 10),
                   child: Icon(
                     Icons.shopping_cart_outlined,
                   ),
@@ -60,7 +60,7 @@ class DieselItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
-                        height: 30,
+                        height: 5,
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.5,

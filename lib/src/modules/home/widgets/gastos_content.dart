@@ -26,9 +26,7 @@ class _GastosContentState extends State<GastosContent> {
         Observer(
           builder: (_) {
             return Visibility(
-              visible: widget.controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
+              visible: widget.controller.homeStatus != HomeStateStatus.loading,
               replacement: const Center(child: CircularProgressIndicator()),
               child: Stack(
                 alignment: Alignment.centerRight,
@@ -40,7 +38,7 @@ class _GastosContentState extends State<GastosContent> {
                     items: widget.controller.farmList?.map((farm) {
                       return DropdownMenuItem<int>(
                         value: farm.id,
-                        child: Text(farm.nome), // Nome da fazenda
+                        child: Text(farm.nome),
                       );
                     }).toList(),
                     onChanged: widget.onFarmSelected,
@@ -64,39 +62,33 @@ class _GastosContentState extends State<GastosContent> {
             );
           },
         ),
-        Observer(
-          builder: (_) {
-            return Visibility(
-              visible: widget.controller.homeStatus == HomeStateStatus.loading
-                  ? false
-                  : true,
-              replacement: const Center(
-                child: CircularProgressIndicator(),
-              ),
-              child: Expanded(
-                child: Observer(
-                  builder: (_) {
-                    return widget.controller.gastosSearch!.isEmpty
-                        ? const Center(
-                            child: Text('Nenhum gasto encontrado'),
-                          )
-                        : ListView.builder(
-                            itemCount: widget.controller.gastosSearch?.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: GastoItem(
-                                    controller: widget.controller,
-                                    gasto:
-                                        widget.controller.gastosSearch![index]),
-                              );
-                            },
-                          );
-                  },
+        Expanded(
+          child: Observer(
+            builder: (_) {
+              return Visibility(
+                visible:
+                    widget.controller.homeStatus != HomeStateStatus.loading,
+                replacement: const Center(
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-            );
-          },
+                child: widget.controller.gastosSearch!.isEmpty
+                    ? const Center(
+                        child: Text('Nenhum gasto encontrado'),
+                      )
+                    : ListView.builder(
+                        itemCount: widget.controller.gastosSearch?.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: GastoItem(
+                                controller: widget.controller,
+                                gasto: widget.controller.gastosSearch![index]),
+                          );
+                        },
+                      ),
+              );
+            },
+          ),
         ),
       ],
     );

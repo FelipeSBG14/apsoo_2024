@@ -36,66 +36,64 @@ class FarmItem extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-          height: MediaQuery.of(context).size.height * 0.35,
-          width: MediaQuery.of(context).size.width * 0.13,
+          height: MediaQuery.of(context).size.height * 0.4,
+          width: MediaQuery.of(context).size.width * 0.14,
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    width: MediaQuery.of(context).size.width * 0.12,
-                    color: Colors.blueGrey,
-                    child: Image.asset(
-                      'assets/images/fazenda.jpg',
-                      fit: BoxFit.fitHeight,
-                    ),
+              child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: MediaQuery.of(context).size.width * 0.12,
+                  child: Image.asset(
+                    'assets/images/fazenda.jpg',
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 8),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          farm.nome,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.textStyles.textRegular.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 8),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        farm.nome,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textStyles.textRegular.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(
-                          height: 12,
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        'Valor do Serviço',
+                        style: context.textStyles.textRegular.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
-                        Text(
-                          'Valor do Serviço',
-                          style: context.textStyles.textRegular.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
+                      ),
+                      Text(
+                        formatCurrency(farm.valorTotal),
+                        style: context.textStyles.textRegular.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
-                        Text(
-                          formatCurrency(farm.valorTotal),
-                          style: context.textStyles.textRegular.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
-          ),
+          )),
         ),
       ),
     );
